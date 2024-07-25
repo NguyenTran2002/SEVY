@@ -1,0 +1,15 @@
+version: '3'
+services:
+  react-frontend:
+    build:
+      context: ./react-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - python-backend
+
+  python-backend:
+    build:
+      context: ./python-backend
+    ports:
+      - "5001:5000" # external port 5001 is mapped to the internal port 5000 of the Python backend container
