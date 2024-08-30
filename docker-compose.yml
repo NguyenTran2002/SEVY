@@ -7,9 +7,17 @@ services:
       - "3000:3000"
     depends_on:
       - python-backend
+    networks:
+      - SEVY_network
 
   python-backend:
     build:
       context: ./python-backend
     ports:
       - "5001:5000" # external port 5001 is mapped to the internal port 5000 of the Python backend container
+    networks:
+      - SEVY_network
+
+networks:
+  SEVY_network:
+    driver: bridge
