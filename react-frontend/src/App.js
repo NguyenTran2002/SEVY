@@ -12,7 +12,7 @@ function App() {
     setMessages([...messages, newMessage]);
     setInput('');
 
-    const response = await fetch('http://localhost:5001/chat', { // Ensure this port matches your backend port
+    const response = await fetch('/chat', { // Ensure this port matches your backend port
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
