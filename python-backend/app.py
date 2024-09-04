@@ -46,7 +46,7 @@ def chat():
             reply = "This is a default response in developer mode."
         else:
             reply = generate_completion(message)
-            # reply = remove_double_stars_from_text(reply)
+            reply = remove_double_stars_from_text(reply)
         print(f"\n\nGenerated reply: {reply}\n\n")
         return jsonify({'reply': reply})
     return jsonify({'reply': 'No message received'})
