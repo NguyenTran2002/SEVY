@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import './App.css';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
+import './LanguageSwitcher.css';
 
 function App() {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
 
   const sendMessage = async () => {
     if (input.trim() === '') return;
-    const newMessage = { user: 'User', text: input };
+
+    const newMessage = { user: t('you'), text: input };
     setMessages([...messages, newMessage]);
     setInput('');
 
-    const response = await fetch('/chat', { // Ensure this port matches your backend port
+    const response = await fetch('/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +27,7 @@ function App() {
 
     const data = await response.json();
     if (data.reply) {
-      setMessages([...messages, newMessage, { user: 'AI', text: data.reply }]);
+      setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
     }
   };
 
@@ -35,6 +40,7 @@ function App() {
   return (
     <div className="App">
       <div className="chat-container">
+        <LanguageSwitcher /> {/* Add the LanguageSwitcher component here */}
         <div className="header">SEVY AI</div>
         <div className="chat-window">
           <div className="chat-messages">
@@ -50,9 +56,9 @@ function App() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Type your message..."
+              placeholder={t('type_your_message')}
             />
-            <button onClick={sendMessage}>Send</button>
+            <button onClick={sendMessage}>{t('send_button')}</button>
           </div>
         </div>
         <div className="developer-mode-toggle">
@@ -62,7 +68,7 @@ function App() {
               checked={isDeveloperMode}
               onChange={() => setIsDeveloperMode(!isDeveloperMode)}
             />
-            Developer Mode
+            {t('developer_mode')}
           </label>
         </div>
       </div>
