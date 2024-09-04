@@ -46,9 +46,15 @@ def chat():
             reply = "This is a default response in developer mode."
         else:
             reply = generate_completion(message)
+            # reply = remove_double_stars_from_text(reply)
         print(f"\n\nGenerated reply: {reply}\n\n")
         return jsonify({'reply': reply})
     return jsonify({'reply': 'No message received'})
+
+# -----------------------
+# AUXILLARY FUNCTIONS SECTION
+def remove_double_stars_from_text(text):
+    return text.replace("**", "")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
