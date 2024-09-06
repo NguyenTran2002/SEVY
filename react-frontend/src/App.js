@@ -5,7 +5,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 import './LanguageSwitcher.css';
 
 function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation(); // Extract i18n to access the current language
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
@@ -22,7 +22,11 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message: input, developerMode: isDeveloperMode }),
+      body: JSON.stringify({
+        message: input,
+        developerMode: isDeveloperMode,
+        language: i18n.language, // Add the current language to the request body
+      }),
     });
 
     const data = await response.json();

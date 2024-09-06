@@ -38,7 +38,17 @@ def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
 def chat():
     data = request.get_json()
     message = data.get('message', '')
-    message = "Trả lời ngắn gọn: " + message
+
+    # set language
+    language = data.get('language', '')
+    print(f"Detected language: {language}", flush=True)
+    if language == 'en':
+        message = "Answer concisely: " + message
+        print("Detected English language.", flush=True)
+    else:
+        message = "Trả lời ngắn gọn: " + message
+        print("Detected Vietnamese language.", flush=True)
+
     developer_mode = data.get('developerMode', False)
 
     if message:
@@ -47,7 +57,7 @@ def chat():
         else:
             reply = generate_completion(message)
             reply = remove_double_stars_from_text(reply)
-        print(f"\n\nGenerated reply: {reply}\n\n")
+        print(f"\nGenerated reply: {reply}\n", flush=True)
         return jsonify({'reply': reply})
     return jsonify({'reply': 'No message received'})
 
