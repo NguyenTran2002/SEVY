@@ -14,8 +14,7 @@ function App() {
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
 
   useEffect(() => {
-    // Load the preferred language from localStorage on component mount
-    const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en'; // Default to 'en' if none is found
+    const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
     i18n.changeLanguage(preferredLanguage);
   }, [i18n]);
 
@@ -44,40 +43,44 @@ function App() {
     }
   };
 
-  const formatMessage = (text) => {
-    return text.split('\n').map((str, index) => (
-      <p key={index}>{str}</p>
-    ));
-  };
-
   return (
     <div className="App">
-      <header className="App-header">
-        <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
-          <img src={logo} alt="SEVY Logo" className="App-logo" />
-        </a>
-      </header>
-      <div className="chat-container">
-        <LanguageSwitcher />
+      {/* Navigation Bar */}
+      <nav className="navbar">
+        <div className="navbar-left">
+          <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
+            <img src={logo} alt="SEVY Logo" className="navbar-logo" />
+          </a>
+          <div className="navbar-links">
+            <button>{t('about_sevy')}</button>
+            <button>{t('sevy_ai')}</button>
+            <button>{t('our_team')}</button>
+          </div>
+        </div>
+        <div className="navbar-right">
+          <LanguageSwitcher />
+        </div>
+      </nav>
+
+      {/* Chat Box */}
+      <div className="chat-box">
         <div className="header">SEVY AI</div>
-        <div className="chat-window">
-          <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div key={index} className={`chat-message ${msg.user}`}>
-                <strong>{msg.user}: </strong>{formatMessage(msg.text)}
-              </div>
-            ))}
-          </div>
-          <div className="chat-input">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder={t('type_your_message')}
-            />
-            <button onClick={sendMessage}>{t('send_button')}</button>
-          </div>
+        <div className="chat-messages">
+          {messages.map((msg, index) => (
+            <div key={index} className={`chat-message ${msg.user}`}>
+              <strong>{msg.user}: </strong>{msg.text}
+            </div>
+          ))}
+        </div>
+        <div className="chat-input">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+            placeholder={t('type_your_message')}
+          />
+          <button onClick={sendMessage}>{t('send_button')}</button>
         </div>
         <div className="developer-mode-toggle">
           <label>
