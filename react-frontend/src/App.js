@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
 import './LanguageSwitcher.css';
 
+import logo from './images/SEVY Logo.png';
+
 function App() {
-  const { t, i18n } = useTranslation(); // Extract i18n to access the current language
+  const { t, i18n } = useTranslation();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
+
+  useEffect(() => {
+    // Load the preferred language from localStorage on component mount
+    const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en'; // Default to 'en' if none is found
+    i18n.changeLanguage(preferredLanguage);
+  }, [i18n]);
 
   const sendMessage = async () => {
     if (input.trim() === '') return;
@@ -25,7 +34,7 @@ function App() {
       body: JSON.stringify({
         message: input,
         developerMode: isDeveloperMode,
-        language: i18n.language, // Add the current language to the request body
+        language: i18n.language,
       }),
     });
 
@@ -43,8 +52,13 @@ function App() {
 
   return (
     <div className="App">
+      <header className="App-header">
+        <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
+          <img src={logo} alt="SEVY Logo" className="App-logo" />
+        </a>
+      </header>
       <div className="chat-container">
-        <LanguageSwitcher /> {/* Add the LanguageSwitcher component here */}
+        <LanguageSwitcher />
         <div className="header">SEVY AI</div>
         <div className="chat-window">
           <div className="chat-messages">
