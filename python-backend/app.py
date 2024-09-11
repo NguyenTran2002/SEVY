@@ -36,6 +36,7 @@ def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
         n=1,
         stop=None,
         temperature=0.7)
+        update_sevy_ai_number_of_questions_answered()
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Error generating completion: {e}")
