@@ -302,33 +302,74 @@ body {
 
 /* SEVY by The Numbers Section */
 .numbers-section {
-  color: #333333;
-  padding: 5vh 5vw;
+  color: #333;
+  /* padding: 5vh 5vw; */
   text-align: center;
   margin: 0;
   width: 100%;
   height: auto;
+  /* Set height to auto */
   display: flex;
+  flex-direction: column;
+  /* Stack the title and the cards section */
   justify-content: center;
   align-items: center;
+}
+
+.numbers-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.all-number-cards {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
+  /* Ensures cards wrap to the next line if necessary */
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  /* Centers the container */
 }
 
 .number-card {
-  background-color: #ffb3c1;
+  background-color: #d8bfd8;
+  /* Pastel lavender */
   padding: 2rem;
   margin: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 200px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 20vw;
   text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.number-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .number-card h3 {
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
 
 .number-card p {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
+  margin: 0;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .number-cards-container {
+    flex-direction: column;
+    /* Stack cards vertically on smaller screens */
+  }
+
+  .numbers-cards {
+    width: 80%;
+    /* Ensure the card takes up more space on smaller screens */
+  }
 }
