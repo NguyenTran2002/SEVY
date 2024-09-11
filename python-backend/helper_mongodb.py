@@ -113,3 +113,23 @@ def list_mongo_collections(database_name):
         return []
     finally:
         client.close()
+
+def update_sevy_ai_number_of_questions_answered():
+    client = connect_to_mongo()
+    db = client['SEVY_database']
+    collection = db['SEVY_numbers']
+
+    # Find the document with the sevy_ai_answers field and retrieve the current value
+    document = collection.find_one({"sevy_ai_answers": {"$exists": True}})
+
+    if document:
+        current_value = int(document["sevy_ai_answers"])  # Get the current value of sevy_ai_answers
+        new_value = current_value + 1  # Increment the value by 1
+
+        # Update the document with the new value
+        collection.update_one(
+            {"sevy_ai_answers": current_value},  # Match the document with the current value
+            {"$set": {"sevy_ai_answers": new_value}}  # Set the new incremented value
+        )
+    else:
+        print("Document with sevy_ai_answers not found.")
