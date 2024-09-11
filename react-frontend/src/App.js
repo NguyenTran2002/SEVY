@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ function App() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
+  const [isChatMinimized, setIsChatMinimized] = useState(false); // New state for chat box visibility
 
   useEffect(() => {
     const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
@@ -74,36 +74,50 @@ function App() {
       </div>
 
       {/* Chat Box */}
-      <div className="chat-box">
-        <div className="header">SEVY AI</div>
-        <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div key={index} className={`chat-message ${msg.user}`}>
-              <strong>{msg.user}: </strong>{msg.text}
-            </div>
-          ))}
-        </div>
-        <div className="chat-input">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder={t('type_your_message')}
-          />
-          <button onClick={sendMessage}>{t('send_button')}</button>
-        </div>
-        <div className="developer-mode-toggle">
-          <label>
+      {!isChatMinimized && (  // Show chat box only when it's not minimized
+        <div className="chat-box">
+          <div className="header">
+            SEVY AI
+            <button className="minimize-btn" onClick={() => setIsChatMinimized(true)}>
+              &#x2212; {/* Unicode for minus sign representing minimize */}
+            </button>
+          </div>
+          <div className="chat-messages">
+            {messages.map((msg, index) => (
+              <div key={index} className={`chat-message ${msg.user}`}>
+                <strong>{msg.user}: </strong>{msg.text}
+              </div>
+            ))}
+          </div>
+          <div className="chat-input">
             <input
-              type="checkbox"
-              checked={isDeveloperMode}
-              onChange={() => setIsDeveloperMode(!isDeveloperMode)}
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder={t('type_your_message')}
             />
-            {t('developer_mode')}
-          </label>
+            <button onClick={sendMessage}>{t('send_button')}</button>
+          </div>
+          <div className="developer-mode-toggle">
+            <label>
+              <input
+                type="checkbox"
+                checked={isDeveloperMode}
+                onChange={() => setIsDeveloperMode(!isDeveloperMode)}
+              />
+              {t('developer_mode')}
+            </label>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Minimized Button */}
+      {isChatMinimized && (
+        <button className="open-chat-btn" onClick={() => setIsChatMinimized(false)}>
+          {t('open_chat')}
+        </button>
+      )}
     </div>
   );
 }

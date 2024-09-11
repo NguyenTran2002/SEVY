@@ -25,45 +25,143 @@ body {
   min-height: 100vh;
 }
 
+/* NavBar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vw;
+  background-color: #ffb3c1;
+  color: #333333;
+  /* Dark Gray Text */
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.navbar-right button {
+  margin-left: 1vw;
+  padding: 1vh 1.5vw;
+  background-color: #ffb3c1;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.navbar-right button:hover {
+  background-color: #b4f8c8;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.navbar-logo {
+  height: 5vh;
+  /* max-height: 60px; */
+  width: auto;
+  /* Maintain aspect ratio */
+}
+
+.navbar-links {
+  display: flex;
+  margin-left: 2vw;
+}
+
+.navbar-links button {
+  margin: 0 1vw;
+  padding: 1vh 1.5vw;
+  background-color: #ffb3c1;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.navbar-links button:hover {
+  background-color: #b4f8c8;
+}
+
 /* Chat Box */
 .chat-box {
   position: fixed;
   bottom: 2vh;
-  /* Positioning relative to the viewport */
   right: 2vw;
-  /* Positioning relative to the viewport */
   width: 30vw;
-  /* Set a max width */
+  max-width: 400px;
   z-index: 1000;
-  /* Ensure it's above other elements */
-
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  /* Outer container border radius */
-
   display: flex;
   flex-direction: column;
-  /* Flexbox layout for stacking content vertically */
   height: 80vh;
-  /* Dynamic height, 45% of the viewport */
   overflow: hidden;
-  /* Ensure content doesn’t overflow */
 }
 
-/* Header */
+/* Header with Minimize Button */
 .chat-box .header {
-  background-color: #ffb3c1;
+  background-color: #b4f8c8;
   color: #333;
   padding: 1.5vh;
-  /* Dynamic padding */
   text-align: center;
   font-size: 1.8rem;
-  /* Use rem for responsive font size */
   font-weight: bold;
   border-radius: 10px 10px 0 0;
-  /* Rounded corners at the top */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.minimize-btn {
+  background-color: #e6e6fa;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  /* Adjust size for icon */
+  cursor: pointer;
+  border-radius: 5px;
+  line-height: 1;
+}
+
+.minimize-btn:hover {
+  background-color: #d8bfd8;
+}
+
+/* Minimized Chat Button */
+.open-chat-btn {
+  position: fixed;
+  bottom: 2vh;
+  right: 2vw;
+  background-color: #b4f8c8;
+  /* Mint Green */
+  color: #333333;
+  /* Dark Gray Text */
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.open-chat-btn:hover {
+  background-color: #a2e8b4;
+  /* Slightly darker mint green for hover effect */
 }
 
 /* Chat messages area */
@@ -81,7 +179,8 @@ body {
   border-radius: 5px;
 }
 
-.chat-box .chat-message.User {
+.chat-box .chat-message.You,
+.chat-box .chat-message.Bạn {
   background-color: #ffccd5;
   text-align: left;
 }
@@ -116,7 +215,7 @@ body {
   padding: 1.5vh 2vw;
   border: none;
   border-radius: 5px;
-  background-color: #ffccd5;
+  background-color: #b4f8c8;
   cursor: pointer;
   font-weight: bold;
   font-size: 1rem;
@@ -124,7 +223,7 @@ body {
 }
 
 .chat-box .chat-input button:hover {
-  background-color: #ffb3c1;
+  background-color: #a2e8b4;
 }
 
 /* Developer Mode Toggle */
@@ -139,80 +238,12 @@ body {
   font-weight: bold;
 }
 
-/* NavBar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1vw;
-  background-color: #f7f7f7;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-right {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.navbar-right button {
-  margin-left: 1vw;
-  padding: 1vh 1.5vw;
-  background-color: #ffb3c1;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 5px;
-}
-
-.navbar-right button:hover {
-  background-color: #ffccd5;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.navbar-logo {
-  height: 5vh;
-  /* max-height: 60px; */
-  width: auto;
-  /* Maintain aspect ratio */
-}
-
-.navbar-links {
-  display: flex;
-  margin-left: 2vw;
-}
-
-.navbar-links button {
-  margin: 0 1vw;
-  padding: 1vh 1.5vw;
-  background-color: #ffb3c1;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 5px;
-}
-
-.navbar-links button:hover {
-  background-color: #ffccd5;
-}
-
 /* SEVY's Vision Section */
 .vision-section {
   margin-top: 9vh;
-  background-color: #48cfef;
-  color: white;
+  background-color: #b3e5fc;
+  color: #333333;
+  /* Dark Gray Text */
   padding: 5vh 5vw;
   text-align: center;
   width: 100%;
@@ -240,8 +271,9 @@ body {
 
 /* SEVY by The Numbers Section */
 .numbers-section {
-  background-color: #ed489a;
-  color: white;
+  background-color: #ffc4d6;
+  color: #333333;
+  /* Dark Gray Text */
   padding: 5vh 5vw;
   /* Adjusted padding for better layout */
   text-align: center;
