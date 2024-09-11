@@ -43,10 +43,10 @@ def chat():
     language = data.get('language', '')
     print(f"Detected language: {language}", flush=True)
     if language == 'en':
-        message = "Answer concisely: " + message
+        message = "Answer concisely in English even if the question is not in English: " + message
         print("Detected English language.", flush=True)
     else:
-        message = "Trả lời ngắn gọn: " + message
+        message = "Trả lời ngắn gọn bằng tiếng Việt kể cả nếu câu hỏi không là tiếng việt: " + message
         print("Detected Vietnamese language.", flush=True)
 
     developer_mode = data.get('developerMode', False)

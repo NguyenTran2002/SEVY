@@ -4,17 +4,26 @@ import { useTranslation } from 'react-i18next';
 import './LanguageSwitcher.css';
 
 import logo from './images/SEVY Logo.png';
+import cover from './images/SEVY Cover.jpg';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
-  const [isChatMinimized, setIsChatMinimized] = useState(false); // New state for chat box visibility
+  const [isChatMinimized, setIsChatMinimized] = useState(true); // Minimized by default
 
   useEffect(() => {
     const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
     i18n.changeLanguage(preferredLanguage);
+
+    // Automatically un-minimize chat box after 3 seconds
+    const timer = setTimeout(() => {
+      setIsChatMinimized(false);
+    }, 3000);
+
+    // Clear timer if component unmounts
+    return () => clearTimeout(timer);
   }, [i18n]);
 
   const sendMessage = async () => {
@@ -57,12 +66,28 @@ function App() {
           </div>
         </div>
         <div className="navbar-right">
-          <button onClick={() => i18n.changeLanguage('en')}>English</button>
-          <button onClick={() => i18n.changeLanguage('vi')}>Tiếng Việt</button>
+          <button onClick={() => {
+            i18n.changeLanguage('en');
+            localStorage.setItem('preferredLanguage', 'en'); // Store the selected language
+          }}>
+            English
+          </button>
+          <button onClick={() => {
+            i18n.changeLanguage('vi');
+            localStorage.setItem('preferredLanguage', 'vi'); // Store the selected language
+          }}>
+            Tiếng Việt
+          </button>
         </div>
       </nav>
 
-      {/* SEVY's Vision Section */}
+      {/* SEVY Introduction Section */}
+      <img src={cover} alt="SEVY Cover" className="introduction-image" />
+      <div className="introduction-section">
+        <p>{t('sevy_introduction_content_line_1')}</p>
+        <p>{t('sevy_introduction_content_line_2')}</p>
+      </div>
+
       <div className="vision-section">
         <h2>{t('sevy_vision')}</h2>
         <p>{t('sevy_vision_content_line_1')}</p>
