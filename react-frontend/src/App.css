@@ -238,40 +238,71 @@ body {
   font-weight: bold;
 }
 
-/* SEVY's Vision Section */
-.vision-section {
-  margin-top: 9vh;
+/* SEVY's Introduction Section */
+.introduction-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.introduction-section {
   background-color: #b3e5fc;
   color: #333333;
-  /* Dark Gray Text */
-  padding: 5vh 5vw;
   text-align: center;
   width: 100%;
-  height: 50vh;
+  height: 15vh;
   border-radius: 0;
   display: flex;
   flex-direction: column;
-  /* Ensure elements are stacked vertically */
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  /* Ensure no overflow for the image */
+}
+
+.introduction-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.introduction-section p {
+  font-size: 1.2rem;
+  margin: 0.5rem;
+}
+
+/* SEVY Vision Section */
+.vision-section {
+  background-color: #ffc4d6;
+  color: #333333;
+  /* Dark Gray Text */
+  /* padding: 5vh 5vw; */
+  /* Adjusted padding for better layout */
+  text-align: center;
+  margin: 0;
+  width: 100%;
+  height: 30vh;
+  /* Each section will be 50% of the viewport height */
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Centers content vertically */
 }
 
 .vision-section h2 {
   font-size: 2.5rem;
-  /* Adjust the font size as needed */
   margin-bottom: 1rem;
 }
 
 .vision-section p {
   font-size: 1.2rem;
-  /* Adjust the font size for the paragraphs */
-  margin: 0.5rem 0;
-  /* Add spacing between paragraphs */
+  margin: 0.5rem;
 }
 
 /* SEVY by The Numbers Section */
 .numbers-section {
-  background-color: #ffc4d6;
+  /* background-color: #ffc4d6; */
   color: #333333;
   /* Dark Gray Text */
   padding: 5vh 5vw;
@@ -279,7 +310,7 @@ body {
   text-align: center;
   margin: 0;
   width: 100%;
-  height: 50vh;
+  height: 30vh;
   /* Each section will be 50% of the viewport height */
   border-radius: 0;
   display: flex;
