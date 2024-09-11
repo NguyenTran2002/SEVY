@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from './LanguageSwitcher';
 import './LanguageSwitcher.css';
 
 import logo from './images/SEVY Logo.png';
@@ -58,9 +57,19 @@ function App() {
           </div>
         </div>
         <div className="navbar-right">
-          <LanguageSwitcher />
+          <button onClick={() => i18n.changeLanguage('en')}>English</button>
+          <button onClick={() => i18n.changeLanguage('vi')}>Tiếng Việt</button>
         </div>
       </nav>
+
+      {/* SEVY's Vision Section */}
+      <div className="vision-section">
+        <h2>{t('sevy_vision')}</h2>
+      </div>
+
+      <div className="numbers-section">
+        <h2>{t('sevy_numbers')}</h2>
+      </div>
 
       {/* Chat Box */}
       <div className="chat-box">
