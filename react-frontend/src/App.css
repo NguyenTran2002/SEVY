@@ -46,6 +46,7 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  color: #333;
 }
 
 .navbar-right button {
@@ -79,6 +80,7 @@ body {
 .navbar-links {
   display: flex;
   margin-left: 2vw;
+  color: #333
 }
 
 .navbar-links button {
