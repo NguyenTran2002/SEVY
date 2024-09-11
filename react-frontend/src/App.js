@@ -170,17 +170,30 @@ function App() {
         <p>{t('sevy_introduction_content_line_2')}</p>
       </div>
 
+      {/* SEVY's Vision Section */}
       <div className="vision-section">
         <h2>{t('sevy_vision')}</h2>
         <p>{t('sevy_vision_content_line_1')}</p>
         <p>{t('sevy_vision_content_line_2')}</p>
       </div>
 
+      {/* SEVY by The Numbers Section */}
       <div className="numbers-section">
         <h2>{t('sevy_numbers')}</h2>
-        <p>SEVY Educators: {sevyEducatorsNumber}</p>
-        <p>SEVY AI Answers: {sevyAiAnswers}</p>
-        <p>Students Taught: {studentsTaught}</p>
+      </div>
+      <div className="all-number-cards">
+        <div className="number-card">
+          <h3>{t('sevy_educators')}</h3>
+          <p>{sevyEducatorsNumber}</p>
+        </div>
+        <div className="number-card">
+          <h3>{t('SEVY_AI_answers')}</h3>
+          <p>{sevyAiAnswers}</p>
+        </div>
+        <div className="number-card">
+          <h3>{t('students_taught')}</h3>
+          <p>{studentsTaught}</p>
+        </div>
       </div>
 
       {/* Chat Box */}
