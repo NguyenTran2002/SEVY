@@ -213,23 +213,45 @@ body {
   margin-top: 9vh;
   background-color: #48cfef;
   color: white;
-  padding: 10vh 5vw;
+  padding: 5vh 5vw;
   text-align: center;
   width: 100%;
   height: 50vh;
-  /* Prevent overflow by using 100% of parent container's width */
   border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  /* Ensure elements are stacked vertically */
+  justify-content: center;
+  align-items: center;
+}
+
+.vision-section h2 {
+  font-size: 2.5rem;
+  /* Adjust the font size as needed */
+  margin-bottom: 1rem;
+}
+
+.vision-section p {
+  font-size: 1.2rem;
+  /* Adjust the font size for the paragraphs */
+  margin: 0.5rem 0;
+  /* Add spacing between paragraphs */
 }
 
 /* SEVY by The Numbers Section */
 .numbers-section {
   background-color: #ed489a;
   color: white;
-  padding: 10vh 5vw;
+  padding: 5vh 5vw;
+  /* Adjusted padding for better layout */
   text-align: center;
   margin: 0;
   width: 100%;
   height: 50vh;
-  /* Prevent overflow by using 100% of parent container's width */
+  /* Each section will be 50% of the viewport height */
   border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Centers content vertically */
 }
