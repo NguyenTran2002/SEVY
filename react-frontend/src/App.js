@@ -65,6 +65,8 @@ function App() {
       {/* SEVY's Vision Section */}
       <div className="vision-section">
         <h2>{t('sevy_vision')}</h2>
+        <p>{t('sevy_vision_content_line_1')}</p>
+        <p>{t('sevy_vision_content_line_2')}</p>
       </div>
 
       <div className="numbers-section">
