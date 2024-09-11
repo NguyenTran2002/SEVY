@@ -302,19 +302,33 @@ body {
 
 /* SEVY by The Numbers Section */
 .numbers-section {
-  /* background-color: #ffc4d6; */
   color: #333333;
-  /* Dark Gray Text */
   padding: 5vh 5vw;
-  /* Adjusted padding for better layout */
   text-align: center;
   margin: 0;
   width: 100%;
-  height: 30vh;
-  /* Each section will be 50% of the viewport height */
-  border-radius: 0;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Centers content vertically */
+  flex-wrap: wrap;
+}
+
+.number-card {
+  background-color: #ffb3c1;
+  padding: 2rem;
+  margin: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  text-align: center;
+}
+
+.number-card h3 {
+  margin-bottom: 0.5rem;
+}
+
+.number-card p {
+  font-size: 2rem;
+  font-weight: bold;
 }

@@ -12,8 +12,90 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
   const [isChatMinimized, setIsChatMinimized] = useState(true); // Minimized by default
+  const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
+  const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
+  const [studentsTaught, setStudentsTaught] = useState(null);
+
+  const fetchSevyEducatorsNumber = async () => {
+    try {
+      const response = await fetch('/get_sevy_educators_number', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}) // Sending an empty body
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Sevy Educators Number:', data.sevy_educators_number);
+      return data.sevy_educators_number;
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  };
+
+  const fetchSevyAiAnswers = async () => {
+    try {
+      const response = await fetch('/get_sevy_ai_answers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}) // Sending an empty body
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Sevy AI Answers:', data.sevy_ai_answers);
+      return data.sevy_ai_answers;
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  };
+
+  const fetchStudentsTaught = async () => {
+    try {
+      const response = await fetch('/get_students_taught', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}) // Sending an empty body
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Students Taught Number:', data.students_taught);
+      return data.students_taught;
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  };
 
   useEffect(() => {
+
+    fetchSevyEducatorsNumber().then((number) => {
+      setSevyEducatorsNumber(number);
+    });
+
+    fetchSevyAiAnswers().then((number) => {
+      setSevyAiAnswers(number);
+    });
+
+    fetchStudentsTaught().then((number) => {
+      setStudentsTaught(number);
+    });
+
     const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
     i18n.changeLanguage(preferredLanguage);
 
@@ -96,6 +178,9 @@ function App() {
 
       <div className="numbers-section">
         <h2>{t('sevy_numbers')}</h2>
+        <p>SEVY Educators: {sevyEducatorsNumber}</p>
+        <p>SEVY AI Answers: {sevyAiAnswers}</p>
+        <p>Students Taught: {studentsTaught}</p>
       </div>
 
       {/* Chat Box */}
