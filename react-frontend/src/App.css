@@ -1,3 +1,17 @@
+/* Apply box-sizing to all elements */
+* {
+  box-sizing: border-box;
+}
+
+/* Reset padding and margins */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Prevent horizontal scrolling */
+}
+
 body {
   background-color: #f7f7f7;
   font-family: Arial, sans-serif;
@@ -11,47 +25,143 @@ body {
   min-height: 100vh;
 }
 
+/* NavBar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1vw;
+  background-color: #ffb3c1;
+  color: #333333;
+  /* Dark Gray Text */
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.navbar-right button {
+  margin-left: 1vw;
+  padding: 1vh 1.5vw;
+  background-color: #ffb3c1;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.navbar-right button:hover {
+  background-color: #b4f8c8;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.navbar-logo {
+  height: 5vh;
+  /* max-height: 60px; */
+  width: auto;
+  /* Maintain aspect ratio */
+}
+
+.navbar-links {
+  display: flex;
+  margin-left: 2vw;
+}
+
+.navbar-links button {
+  margin: 0 1vw;
+  padding: 1vh 1.5vw;
+  background-color: #ffb3c1;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.navbar-links button:hover {
+  background-color: #b4f8c8;
+}
+
 /* Chat Box */
 .chat-box {
   position: fixed;
   bottom: 2vh;
-  /* Positioning relative to the viewport */
   right: 2vw;
-  /* Positioning relative to the viewport */
   width: 30vw;
-  /* Width is 30% of the viewport width */
   max-width: 400px;
-  /* Set a max width */
   z-index: 1000;
-  /* Ensure it's above other elements */
-
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  /* Outer container border radius */
-
   display: flex;
   flex-direction: column;
-  /* Flexbox layout for stacking content vertically */
   height: 80vh;
-  /* Dynamic height, 45% of the viewport */
   overflow: hidden;
-  /* Ensure content doesn’t overflow */
 }
 
-/* Header */
+/* Header with Minimize Button */
 .chat-box .header {
-  background-color: #ffb3c1;
+  background-color: #b4f8c8;
   color: #333;
   padding: 1.5vh;
-  /* Dynamic padding */
   text-align: center;
   font-size: 1.8rem;
-  /* Use rem for responsive font size */
   font-weight: bold;
   border-radius: 10px 10px 0 0;
-  /* Rounded corners at the top */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.minimize-btn {
+  background-color: #e6e6fa;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  /* Adjust size for icon */
+  cursor: pointer;
+  border-radius: 5px;
+  line-height: 1;
+}
+
+.minimize-btn:hover {
+  background-color: #d8bfd8;
+}
+
+/* Minimized Chat Button */
+.open-chat-btn {
+  position: fixed;
+  bottom: 2vh;
+  right: 2vw;
+  background-color: #b4f8c8;
+  /* Mint Green */
+  color: #333333;
+  /* Dark Gray Text */
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.open-chat-btn:hover {
+  background-color: #a2e8b4;
+  /* Slightly darker mint green for hover effect */
 }
 
 /* Chat messages area */
@@ -69,7 +179,8 @@ body {
   border-radius: 5px;
 }
 
-.chat-box .chat-message.User {
+.chat-box .chat-message.You,
+.chat-box .chat-message.Bạn {
   background-color: #ffccd5;
   text-align: left;
 }
@@ -104,7 +215,7 @@ body {
   padding: 1.5vh 2vw;
   border: none;
   border-radius: 5px;
-  background-color: #ffccd5;
+  background-color: #b4f8c8;
   cursor: pointer;
   font-weight: bold;
   font-size: 1rem;
@@ -112,7 +223,7 @@ body {
 }
 
 .chat-box .chat-input button:hover {
-  background-color: #ffb3c1;
+  background-color: #a2e8b4;
 }
 
 /* Developer Mode Toggle */
@@ -127,67 +238,138 @@ body {
   font-weight: bold;
 }
 
-/* NavBar */
-.navbar {
+/* SEVY's Introduction Section */
+.introduction-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.introduction-section {
+  background-color: #b3e5fc;
+  color: #333333;
+  text-align: center;
+  width: 100%;
+  height: 15vh;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /* Ensure no overflow for the image */
+}
+
+.introduction-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.introduction-section p {
+  font-size: 1.2rem;
+  margin: 0.5rem;
+}
+
+/* SEVY Vision Section */
+.vision-section {
+  background-color: #ffc4d6;
+  color: #333333;
+  /* Dark Gray Text */
+  /* padding: 5vh 5vw; */
+  /* Adjusted padding for better layout */
+  text-align: center;
+  margin: 0;
+  width: 100%;
+  height: 30vh;
+  /* Each section will be 50% of the viewport height */
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Centers content vertically */
+}
+
+.vision-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.vision-section p {
+  font-size: 1.2rem;
+  margin: 0.5rem;
+}
+
+/* SEVY by The Numbers Section */
+.numbers-section {
+  color: #333;
+  /* padding: 5vh 5vw; */
+  text-align: center;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  /* Set height to auto */
+  display: flex;
+  flex-direction: column;
+  /* Stack the title and the cards section */
+  justify-content: center;
+  align-items: center;
+}
+
+.numbers-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.all-number-cards {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1vw;
-  background-color: #f7f7f7;
+  flex-wrap: wrap;
+  /* Ensures cards wrap to the next line if necessary */
   width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: auto;
+  /* Centers the container */
 }
 
-.navbar-left {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+.number-card {
+  background-color: #d8bfd8;
+  /* Pastel lavender */
+  padding: 2rem;
+  margin: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 20vw;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.navbar-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-right: 2vw;
+.number-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.navbar-logo {
-  height: 5vh;
-  /* Adjust height relative to viewport height */
-  max-height: 60px;
-  /* Set a max height to prevent the logo from being too large */
-  width: auto;
-  /* Maintain aspect ratio */
+.number-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.navbar-links {
-  display: flex;
-  margin-left: 2vw;
-}
-
-.navbar-links button {
-  margin: 0 1vw;
-  padding: 1vh 1.5vw;
-  background-color: #ffb3c1;
-  border: none;
-  cursor: pointer;
+.number-card p {
+  font-size: 2.5rem;
   font-weight: bold;
-  font-size: 1rem;
-  border-radius: 5px;
+  margin: 0;
 }
 
-.navbar-links button:hover {
-  background-color: #ffccd5;
-}
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .number-cards-container {
+    flex-direction: column;
+    /* Stack cards vertically on smaller screens */
+  }
 
-.language-switcher {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-right: 20px;
-  /* Add margin to the right side to prevent clipping */
+  .numbers-cards {
+    width: 80%;
+    /* Ensure the card takes up more space on smaller screens */
+  }
 }
