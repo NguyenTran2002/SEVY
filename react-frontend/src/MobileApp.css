@@ -1,0 +1,74 @@
+/* Mobile-Specific Styles */
+.mobile-wrapper * {
+    box-sizing: border-box;
+}
+
+.mobile-wrapper body {
+    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
+}
+
+.mobile-wrapper .MobileApp {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.mobile-wrapper .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2vw;
+    background-color: #ffb3c1;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.mobile-wrapper .navbar-logo {
+    height: 8vh;
+}
+
+.mobile-wrapper .navbar-links button {
+    padding: 2vh 2vw;
+    font-size: 1.2rem;
+}
+
+.mobile-wrapper .introduction-section {
+    background-color: #b3e5fc;
+    text-align: center;
+    width: 100%;
+    height: 25vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mobile-wrapper .vision-section {
+    background-color: #ffc4d6;
+    text-align: center;
+    width: 100%;
+    height: 35vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mobile-wrapper .numbers-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mobile-wrapper .number-card {
+    background-color: #d8bfd8;
+    padding: 4vw;
+    margin: 2vw;
+    width: 80vw;
+    text-align: center;
+    border-radius: 1.5rem;
+    box-shadow: 0 4vw 8vw rgba(0, 0, 0, 0.2);
+}

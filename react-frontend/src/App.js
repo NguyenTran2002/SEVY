@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import './LanguageSwitcher.css';
@@ -8,6 +9,9 @@ import cover from './images/SEVY Cover.jpg';
 
 function App() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate(); // useNavigate for internal navigation
+  const location = useLocation(); // location to access the current path
+
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
@@ -81,6 +85,44 @@ function App() {
       console.error('There was a problem with the fetch operation:', error);
     }
   };
+
+  useEffect(() => {
+    const handleOrientationChange = (e) => {
+      const currentPath = location.pathname;
+
+      if (e.matches) {
+        // If in portrait mode and not already on /mobile, redirect to /mobile
+        if (!currentPath.includes("/mobile")) {
+          navigate('/mobile');
+        }
+      } else {
+        // If in landscape mode and on /mobile, redirect back to home
+        if (currentPath.includes("/mobile")) {
+          navigate('/');
+        }
+      }
+    };
+
+    const portraitQuery = window.matchMedia("(orientation: portrait)");
+    const landscapeQuery = window.matchMedia("(orientation: landscape)");
+
+    // Attach listeners for both portrait and landscape modes
+    portraitQuery.addListener(handleOrientationChange);
+    landscapeQuery.addListener(handleOrientationChange);
+
+    // Check initial orientation
+    if (portraitQuery.matches && !location.pathname.includes("/mobile")) {
+      navigate('/mobile');
+    } else if (landscapeQuery.matches && location.pathname.includes("/mobile")) {
+      navigate('/');
+    }
+
+    // Cleanup listeners on component unmount
+    return () => {
+      portraitQuery.removeListener(handleOrientationChange);
+      landscapeQuery.removeListener(handleOrientationChange);
+    };
+  }, [location.pathname, navigate]);
 
   useEffect(() => {
 
