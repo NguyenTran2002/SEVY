@@ -26,11 +26,24 @@ function MobileApp() {
             const studentsTaughtData = await studentsTaughtResponse.json();
             setStudentsTaught(studentsTaughtData.students_taught);
         };
+
+        // Fetch data on component mount
         fetchData();
-    }, []);
+
+        // Retrieve language from local storage if available
+        const storedLanguage = localStorage.getItem('preferredLanguage');
+        if (storedLanguage) {
+            i18n.changeLanguage(storedLanguage);
+        }
+    }, [i18n]);
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+        localStorage.setItem('preferredLanguage', lang); // Store selected language in local storage
+    };
 
     return (
-        <div className="mobile-wrapper"> {/* Add the wrapper here */}
+        <div className="mobile-wrapper">
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
@@ -43,8 +56,8 @@ function MobileApp() {
                     </div>
                 </div>
                 <div className="navbar-right">
-                    <button onClick={() => i18n.changeLanguage('en')}>English</button>
-                    <button onClick={() => i18n.changeLanguage('vi')}>Tiếng Việt</button>
+                    <button onClick={() => handleLanguageChange('en')}>English</button>
+                    <button onClick={() => handleLanguageChange('vi')}>Tiếng Việt</button>
                 </div>
             </nav>
 
