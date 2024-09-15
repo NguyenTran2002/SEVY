@@ -85,6 +85,7 @@ def get_sevy_educators_number():
         print(f"sevy_educators_number value: {sevy_educators_number}", flush=True)
         db_client.close()
         return jsonify({'sevy_educators_number': sevy_educators_number})
+    db_client.close()
     return jsonify({'sevy_educators_number': 'N/A'})
 
 @app.route('/get_sevy_ai_answers', methods=['POST'])
@@ -103,6 +104,7 @@ def get_sevy_ai_answers():
         print(f"sevy_ai_answers value: {sevy_ai_answers}", flush=True)
         db_client.close()
         return jsonify({'sevy_ai_answers': sevy_ai_answers})
+    db_client.close()
     return jsonify({'sevy_ai_answers': 'N/A'})
 
 @app.route('/get_students_taught', methods=['POST'])
@@ -121,6 +123,7 @@ def get_students_taught():
         print(f"sevy_ai_answers value: {students_taught}", flush=True)
         db_client.close()
         return jsonify({'students_taught': students_taught})
+    db_client.close()
     return jsonify({'students_taught': 'N/A'})
 
 # -----------------------
