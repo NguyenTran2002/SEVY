@@ -9,7 +9,8 @@
     "marked": "^4.0.10",
     "http-proxy-middleware": "^2.0.1",
     "i18next": "^23.0.0",
-    "react-i18next": "^13.0.0"
+    "react-i18next": "^13.0.0",
+    "react-router-dom": "^6.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.18.6"
