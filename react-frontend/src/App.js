@@ -185,7 +185,7 @@ function App() {
           </a>
           <div className="navbar-links">
             <button>{t('about_sevy')}</button>
-            <button>{t('sevy_ai')}</button>
+            <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button> {/* Navigate to /sevyai */}
             <button>{t('our_team')}</button>
           </div>
         </div>
