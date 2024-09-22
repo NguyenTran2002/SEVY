@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './MobileApp.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
@@ -6,6 +7,9 @@ import cover from './images/SEVY Cover.jpg';
 
 function MobileApp() {
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate(); // useNavigate for internal navigation
+    // const location = useLocation(); // location to access the current path
+    // if enable the above line of code, don't forget to import import { useNavigate, useLocation } from 'react-router-dom';
 
     const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
     const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
@@ -50,8 +54,8 @@ function MobileApp() {
                         <img src={logo} alt="SEVY Logo" className="navbar-logo" />
                     </a>
                     <div className="navbar-links">
-                        <button>{t('about_sevy')}</button>
-                        <button>{t('sevy_ai')}</button>
+                        <button onClick={() => navigate('/')}>{t('about_sevy')}</button>
+                        <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button> {/* Navigate to /sevyai */}
                         <button>{t('our_team')}</button>
                     </div>
                 </div>
