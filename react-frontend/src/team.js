@@ -1,4 +1,3 @@
-// team.js
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next'; // Correct import for i18n
@@ -83,11 +82,19 @@ const Team = () => {
                 <h1>{t('our_team')}</h1>
                 <div className="team-section">
                     <img src={team} alt={t('team_photo_caption')} className="team-photo" />
-                    <p className="caption">{t('team_photo_caption')}</p>
+                    <h2 className="caption">{t('team_photo_caption')}</h2>
                 </div>
                 <div className="team-section">
                     <img src={core_team} alt={t('core_team_photo_caption')} className="team-photo" />
-                    <p className="caption">{t('core_team_photo_caption')}</p>
+                    <h2 className="caption">{t('core_team_photo_caption')}</h2>
+                    <div className="team-captions">
+                        <p>{t('core_team_member_1')}</p>
+                        <p>{t('core_team_member_2')}</p>
+                        <p>{t('core_team_member_3')}</p>
+                        <p>{t('core_team_member_4')}</p>
+                        <p>{t('core_team_member_5')}</p>
+                        <p>{t('core_team_member_6')}</p>
+                    </div>
                 </div>
             </div>
         </div>

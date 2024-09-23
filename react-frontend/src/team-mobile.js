@@ -1,4 +1,3 @@
-// team-mobile.js
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -48,7 +47,15 @@ const TeamMobile = () => {
                 </div>
                 <div className="team-section">
                     <img src={core_team} alt={t('core_team_photo_caption')} className="team-photo" />
-                    <p className="caption">{t('core_team_photo_caption')}</p>
+                    <h2 className="caption">{t('core_team_photo_caption')}</h2>
+                    <div className="team-mobile-captions">
+                        <p>{t('core_team_member_1')}</p>
+                        <p>{t('core_team_member_2')}</p>
+                        <p>{t('core_team_member_3')}</p>
+                        <p>{t('core_team_member_4')}</p>
+                        <p>{t('core_team_member_5')}</p>
+                        <p>{t('core_team_member_6')}</p>
+                    </div>
                 </div>
             </div>
         </div>
