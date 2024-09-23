@@ -1,15 +1,14 @@
-.mobile-wrapper {
+.team-mobile-wrapper {
     text-align: center;
     margin-top: 10vh;
 }
 
-.team-section {
+.team-mobile-wrapper .team-section {
     margin-bottom: 40px;
 }
 
-.team-photo {
+.team-mobile-wrapper .team-photo {
     max-width: 90%;
-    /* Reduce the width for more space on mobile */
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -17,8 +16,7 @@
     margin-right: auto;
 }
 
-/* Styling the h2 caption to stand out in mobile view */
-h2.caption {
+.team-mobile-wrapper h2.caption {
     font-size: 1.5rem;
     color: #333;
     font-weight: bold;
@@ -27,21 +25,17 @@ h2.caption {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.team-mobile-captions {
+.team-mobile-wrapper .team-mobile-captions {
     font-size: 14px;
     margin: 10px 0;
     text-align: center;
     padding: 0 15px;
-    /* Add padding to the left and right for mobile view */
     max-width: 90%;
-    /* Ensure the text doesn't stretch too much on small screens */
     margin-left: auto;
     margin-right: auto;
-    /* Center the captions */
 }
 
-/* Navbar styles */
-.navbar {
+.team-mobile-wrapper .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,11 +48,11 @@ h2.caption {
     z-index: 1000;
 }
 
-.navbar-logo {
+.team-mobile-wrapper .navbar-logo {
     height: 4vh;
 }
 
-.navbar-links button {
+.team-mobile-wrapper .navbar-links button {
     background-color: #b3e5fc;
     border: none;
     cursor: pointer;
@@ -69,11 +63,11 @@ h2.caption {
     margin-left: 1vw;
 }
 
-.navbar-links button:hover {
+.team-mobile-wrapper .navbar-links button:hover {
     background-color: #b4f8c8;
 }
 
-.navbar-right button {
+.team-mobile-wrapper .navbar-right button {
     background-color: #b3e5fc;
     border: none;
     cursor: pointer;
@@ -84,6 +78,6 @@ h2.caption {
     margin-left: 1vw;
 }
 
-.navbar-right button:hover {
+.team-mobile-wrapper .navbar-right button:hover {
     background-color: #b4f8c8;
 }
