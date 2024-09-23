@@ -13,6 +13,16 @@ function SevyAI() {
     const [messages, setMessages] = useState([]);
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
 
+    // Set the document title when the component mounts
+    useEffect(() => {
+        document.title = "SEVY AI";
+
+        // Cleanup function to reset the title when the component unmounts
+        return () => {
+            document.title = "SEVY"; // Or any default title
+        };
+    }, []);
+
     useEffect(() => {
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
@@ -31,18 +41,15 @@ function SevyAI() {
         const portraitQuery = window.matchMedia("(orientation: portrait)");
         const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
-        // Attach listeners for both portrait and landscape modes
         portraitQuery.addListener(handleOrientationChange);
         landscapeQuery.addListener(handleOrientationChange);
 
-        // Check initial orientation
         if (portraitQuery.matches && !location.pathname.includes("/mobile")) {
             navigate('/sevyai-mobile');
         } else if (landscapeQuery.matches && location.pathname.includes("/mobile")) {
             navigate('/sevyai');
         }
 
-        // Cleanup listeners on component unmount
         return () => {
             portraitQuery.removeListener(handleOrientationChange);
             landscapeQuery.removeListener(handleOrientationChange);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import team from './images/SEVY Team.jpg';
@@ -9,6 +9,11 @@ import logo from './images/SEVY Logo.png';
 const TeamMobile = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Dynamically set the document title based on the language
+        document.title = t('our_team');
+    }, [t]);
 
     return (
         <div className="team-mobile-wrapper">  {/* Unique wrapper for team mobile */}
