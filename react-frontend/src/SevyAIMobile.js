@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './SevyAI.css';
+import './SevyAIMobile.css'; // This will be the mobile-specific CSS
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
 
-function SevyAI() {
+function SevyAIMobile() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
@@ -17,34 +17,23 @@ function SevyAI() {
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
 
-            if (e.matches) {
-                if (!currentPath.includes("/mobile")) {
-                    navigate('/sevyai-mobile');
-                }
-            } else {
-                if (currentPath.includes("/mobile")) {
-                    navigate('/sevyai');
-                }
+            if (!e.matches && currentPath.includes("/sevyai-mobile")) {
+                navigate('/sevyai');
             }
         };
 
-        const portraitQuery = window.matchMedia("(orientation: portrait)");
         const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
-        // Attach listeners for both portrait and landscape modes
-        portraitQuery.addListener(handleOrientationChange);
+        // Attach listener for landscape mode
         landscapeQuery.addListener(handleOrientationChange);
 
         // Check initial orientation
-        if (portraitQuery.matches && !location.pathname.includes("/mobile")) {
-            navigate('/sevyai-mobile');
-        } else if (landscapeQuery.matches && location.pathname.includes("/mobile")) {
+        if (!window.matchMedia("(orientation: portrait)").matches && location.pathname.includes("/sevyai-mobile")) {
             navigate('/sevyai');
         }
 
         // Cleanup listeners on component unmount
         return () => {
-            portraitQuery.removeListener(handleOrientationChange);
             landscapeQuery.removeListener(handleOrientationChange);
         };
     }, [location.pathname, navigate]);
@@ -75,7 +64,7 @@ function SevyAI() {
     };
 
     return (
-        <div className="sevy-ai-wrapper">
+        <div className="sevyai-mobile-wrapper"> {/* Wrap everything inside the mobile wrapper */}
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
@@ -146,4 +135,4 @@ function SevyAI() {
     );
 }
 
-export default SevyAI;
+export default SevyAIMobile;
