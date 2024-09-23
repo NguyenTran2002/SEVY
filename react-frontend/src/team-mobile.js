@@ -11,7 +11,7 @@ const TeamMobile = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="mobile-wrapper">
+        <div className="team-mobile-wrapper">  {/* Unique wrapper for team mobile */}
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
@@ -20,7 +20,7 @@ const TeamMobile = () => {
                     <div className="navbar-links">
                         <button onClick={() => navigate('/')}>{t('home')}</button>
                         <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button>
-                        <button>{t('our_team')}</button> {/* Already on Our Team page */}
+                        <button onClick={() => navigate('/our-team')}>{t('our_team')}</button> {/* Now on Our Team page */}
                     </div>
                 </div>
                 <div className="navbar-right">
