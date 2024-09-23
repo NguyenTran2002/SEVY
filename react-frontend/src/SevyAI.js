@@ -1,18 +1,53 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './SevyAI.css'; // Import the SevyAI-specific CSS
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import './SevyAI.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
 
 function SevyAI() {
     const { t, i18n } = useTranslation();
-    const navigate = useNavigate(); // useNavigate for internal navigation
-    // const location = useLocation(); // location to access the current path
-    // if enable the above line of code, don't forget to import import { useNavigate, useLocation } from 'react-router-dom';
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
+
+    useEffect(() => {
+        const handleOrientationChange = (e) => {
+            const currentPath = location.pathname;
+
+            if (e.matches) {
+                if (!currentPath.includes("/mobile")) {
+                    navigate('/sevyai-mobile');
+                }
+            } else {
+                if (currentPath.includes("/mobile")) {
+                    navigate('/sevyai');
+                }
+            }
+        };
+
+        const portraitQuery = window.matchMedia("(orientation: portrait)");
+        const landscapeQuery = window.matchMedia("(orientation: landscape)");
+
+        // Attach listeners for both portrait and landscape modes
+        portraitQuery.addListener(handleOrientationChange);
+        landscapeQuery.addListener(handleOrientationChange);
+
+        // Check initial orientation
+        if (portraitQuery.matches && !location.pathname.includes("/mobile")) {
+            navigate('/sevyai-mobile');
+        } else if (landscapeQuery.matches && location.pathname.includes("/mobile")) {
+            navigate('/sevyai');
+        }
+
+        // Cleanup listeners on component unmount
+        return () => {
+            portraitQuery.removeListener(handleOrientationChange);
+            landscapeQuery.removeListener(handleOrientationChange);
+        };
+    }, [location.pathname, navigate]);
 
     const sendMessage = async () => {
         if (input.trim() === '') return;
@@ -40,15 +75,15 @@ function SevyAI() {
     };
 
     return (
-        <div className="sevy-ai-wrapper"> {/* Wrap the entire content */}
+        <div className="sevy-ai-wrapper">
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
                         <img src={logo} alt="SEVY Logo" className="navbar-logo" />
                     </a>
                     <div className="navbar-links">
-                        <button onClick={() => navigate('/')}>{t('about_sevy')}</button>
-                        <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button> {/* Navigate to /sevyai */}
+                        <button onClick={() => navigate('/')}>{t('home')}</button>
+                        <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button>
                         <button>{t('our_team')}</button>
                     </div>
                 </div>
@@ -69,12 +104,10 @@ function SevyAI() {
             </nav>
 
             <div className="sevyai-chat-box full-screen">
-                {/* Mint Banner */}
                 <div className="sevyai-banner">
                     <h1>SEVY AI</h1>
                 </div>
 
-                {/* Disclaimer Box */}
                 <div className="sevyai-disclaimer">
                     <p>{t('SEVY_AI_disclaimer')}</p>
                 </div>
