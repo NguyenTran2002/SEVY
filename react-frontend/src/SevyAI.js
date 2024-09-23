@@ -47,7 +47,7 @@ function SevyAI() {
                         <img src={logo} alt="SEVY Logo" className="navbar-logo" />
                     </a>
                     <div className="navbar-links">
-                        {/* <button onClick={() => navigate('/')}>{t('about_sevy')}</button> */}
+                        <button onClick={() => navigate('/')}>{t('home')}</button>
                         <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button> {/* Navigate to /sevyai */}
                         <button>{t('our_team')}</button>
                     </div>
