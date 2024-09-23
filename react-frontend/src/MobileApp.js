@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './MobileApp.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
-import cover from './images/SEVY Cover.jpg';
+import cover from './images/SEVY and Students Cropped 1.jpg';
 
 function MobileApp() {
     const { t, i18n } = useTranslation();
@@ -54,7 +54,8 @@ function MobileApp() {
                         <img src={logo} alt="SEVY Logo" className="navbar-logo" />
                     </a>
                     <div className="navbar-links">
-                        {/* <button onClick={() => navigate('/')}>{t('about_sevy')}</button> */}
+                        {/* <button onClick={() => navigate('/')}>{t('home')}</button> */}
+                        {/* home button commented out for more spacing */}
                         <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button> {/* Navigate to /sevyai */}
                         <button>{t('our_team')}</button>
                     </div>
@@ -67,8 +68,9 @@ function MobileApp() {
 
             <img src={cover} alt="SEVY Cover" className="introduction-image" />
             <div className="introduction-section">
-                <p>{t('sevy_introduction_content_line_1')}</p>
+                <h2>{t('sevy_introduction_content_line_1')}</h2>
                 <p>{t('sevy_introduction_content_line_2')}</p>
+                <p>{t('sevy_introduction_content_line_3')}</p>
             </div>
 
             <div className="vision-section">
