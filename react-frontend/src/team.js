@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Correct import for i18n
+import { useTranslation } from 'react-i18next';
 import team from './images/SEVY Team.jpg';
 import core_team from './images/Core Team.jpg';
 import './team.css';
@@ -12,6 +12,9 @@ const Team = () => {
     const location = useLocation();
 
     useEffect(() => {
+        // Dynamically set the document title based on the language
+        document.title = t('our_team');
+
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
 
@@ -47,7 +50,7 @@ const Team = () => {
             portraitQuery.removeListener(handleOrientationChange);
             landscapeQuery.removeListener(handleOrientationChange);
         };
-    }, [location.pathname, navigate]);
+    }, [location.pathname, navigate, t]);
 
     return (
         <div className="team-page">

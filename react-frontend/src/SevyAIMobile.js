@@ -14,6 +14,9 @@ function SevyAIMobile() {
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
 
     useEffect(() => {
+        // Set the document title to "SEVY AI"
+        document.title = "SEVY AI";
+
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
 

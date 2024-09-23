@@ -9,16 +9,26 @@ import cover from './images/SEVY and Students Cropped 1.jpg';
 
 function App() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate(); // useNavigate for internal navigation
-  const location = useLocation(); // location to access the current path
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
-  const [isChatMinimized, setIsChatMinimized] = useState(true); // Minimized by default
+  const [isChatMinimized, setIsChatMinimized] = useState(true);
   const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
   const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
   const [studentsTaught, setStudentsTaught] = useState(null);
+
+  useEffect(() => {
+    // Set the document title
+    document.title = "SEVY";
+
+    // Cleanup function to reset title on unmount if needed
+    return () => {
+      document.title = "SEVY";
+    };
+  }, []);
 
   const fetchSevyEducatorsNumber = async () => {
     try {
@@ -27,7 +37,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}) // Sending an empty body
+        body: JSON.stringify({})
       });
 
       if (!response.ok) {
@@ -49,7 +59,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}) // Sending an empty body
+        body: JSON.stringify({})
       });
 
       if (!response.ok) {
@@ -71,7 +81,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({}) // Sending an empty body
+        body: JSON.stringify({})
       });
 
       if (!response.ok) {
@@ -91,12 +101,10 @@ function App() {
       const currentPath = location.pathname;
 
       if (e.matches) {
-        // If in portrait mode and not already on /mobile, redirect to /mobile
         if (!currentPath.includes("/mobile")) {
           navigate('/mobile');
         }
       } else {
-        // If in landscape mode and on /mobile, redirect back to home
         if (currentPath.includes("/mobile")) {
           navigate('/');
         }
@@ -106,18 +114,15 @@ function App() {
     const portraitQuery = window.matchMedia("(orientation: portrait)");
     const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
-    // Attach listeners for both portrait and landscape modes
     portraitQuery.addListener(handleOrientationChange);
     landscapeQuery.addListener(handleOrientationChange);
 
-    // Check initial orientation
     if (portraitQuery.matches && !location.pathname.includes("/mobile")) {
       navigate('/mobile');
     } else if (landscapeQuery.matches && location.pathname.includes("/mobile")) {
       navigate('/');
     }
 
-    // Cleanup listeners on component unmount
     return () => {
       portraitQuery.removeListener(handleOrientationChange);
       landscapeQuery.removeListener(handleOrientationChange);
@@ -141,12 +146,10 @@ function App() {
     const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
     i18n.changeLanguage(preferredLanguage);
 
-    // Automatically un-minimize chat box after 3 seconds
     const timer = setTimeout(() => {
       setIsChatMinimized(false);
     }, 3000);
 
-    // Clear timer if component unmounts
     return () => clearTimeout(timer);
   }, [i18n]);
 
