@@ -52,7 +52,8 @@ body {
 .navbar-right button {
   margin-left: 1vw;
   padding: 1vh 1.5vw;
-  background-color: #ffb3c1;
+  /* background-color: #ffb3c1; */
+  background-color: #b3e5fc;
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -86,7 +87,8 @@ body {
 .navbar-links button {
   margin: 0 1vw;
   padding: 1vh 1.5vw;
-  background-color: #ffb3c1;
+  /* background-color: #ffb3c1; */
+  background-color: #b3e5fc;
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -252,8 +254,9 @@ body {
   color: #333333;
   text-align: center;
   width: 100%;
-  height: 15vh;
+  height: auto;
   border-radius: 0;
+  padding: 4%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -282,8 +285,9 @@ body {
   text-align: center;
   margin: 0;
   width: 100%;
-  height: 30vh;
-  /* Each section will be 50% of the viewport height */
+  /* height: 30vh; */
+  height: auto;
+  padding: 4%;
   border-radius: 0;
   display: flex;
   flex-direction: column;
@@ -309,6 +313,7 @@ body {
   text-align: center;
   margin: 0;
   width: 100%;
+  padding: 4%;
   height: auto;
   /* Set height to auto */
   display: flex;
