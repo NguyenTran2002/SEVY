@@ -1,0 +1,77 @@
+/* team.css */
+.team-page {
+    margin-top: 10vh;
+    /* Ensure it doesn't overlap with fixed navbar */
+    text-align: center;
+}
+
+.team-section {
+    margin-bottom: 40px;
+}
+
+.team-photo {
+    max-width: 70%;
+    /* Reduce the width for more space on the sides */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.caption {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* Ensure the navbar styles are consistent */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vw;
+    background-color: #ffb3c1;
+    color: #333;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-logo {
+    height: 5vh;
+    width: auto;
+}
+
+.navbar-links button {
+    margin: 0 1vw;
+    padding: 1vh 1.5vw;
+    background-color: #b3e5fc;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.navbar-links button:hover {
+    background-color: #b4f8c8;
+}
+
+.navbar-right button {
+    margin-left: 1vw;
+    padding: 1vh 1.5vw;
+    background-color: #b3e5fc;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.navbar-right button:hover {
+    background-color: #b4f8c8;
+}
