@@ -7,15 +7,16 @@ import cover from './images/SEVY and Students Cropped 1.jpg';
 
 function MobileApp() {
     const { t, i18n } = useTranslation();
-    const navigate = useNavigate(); // useNavigate for internal navigation
-    // const location = useLocation(); // location to access the current path
-    // if enable the above line of code, don't forget to import import { useNavigate, useLocation } from 'react-router-dom';
+    const navigate = useNavigate();
 
     const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
     const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
     const [studentsTaught, setStudentsTaught] = useState(null);
 
     useEffect(() => {
+        // Set the document title
+        document.title = "SEVY";
+
         // Fetch data for mobile site
         const fetchData = async () => {
             const sevyEducatorsResponse = await fetch('/get_sevy_educators_number', { method: 'POST' });
@@ -54,9 +55,7 @@ function MobileApp() {
                         <img src={logo} alt="SEVY Logo" className="navbar-logo" />
                     </a>
                     <div className="navbar-links">
-                        {/* <button onClick={() => navigate('/')}>{t('home')}</button> */}
-                        {/* home button commented out for more spacing */}
-                        <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button> {/* Navigate to /sevyai */}
+                        <button onClick={() => navigate('/sevyai')}>{t('sevy_ai')}</button>
                         <button onClick={() => navigate('/our-team')}>{t('our_team')}</button>
                     </div>
                 </div>
