@@ -367,3 +367,24 @@ body {
   font-weight: bold;
   margin: 0;
 }
+
+/* Loading Bar */
+.loading-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* SEVY AI Disclaimer */
+.home-sevyai-disclaimer {
+  background-color: #d8bfd8;
+  color: #333;
+  text-align: center;
+  padding: 1vh 2vw;
+  font-size: 0.9rem;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0;
+}

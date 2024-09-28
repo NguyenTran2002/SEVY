@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { LinearProgress } from '@mui/material';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import './LanguageSwitcher.css';
@@ -15,6 +16,7 @@ function App() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isChatMinimized, setIsChatMinimized] = useState(true);
   const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
   const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
@@ -159,22 +161,27 @@ function App() {
     const newMessage = { user: t('you'), text: input };
     setMessages([...messages, newMessage]);
     setInput('');
+    setLoading(true); // Set loading to true when message is sent
 
-    const response = await fetch('/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: input,
-        developerMode: isDeveloperMode,
-        language: i18n.language,
-      }),
-    });
+    try {
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: input,
+          developerMode: isDeveloperMode,
+          language: i18n.language,
+        }),
+      });
 
-    const data = await response.json();
-    if (data.reply) {
-      setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+      const data = await response.json();
+      if (data.reply) {
+        setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+      }
+    } finally {
+      setLoading(false); // Set loading to false when response is received
     }
   };
 
@@ -251,6 +258,24 @@ function App() {
               &#x2212; {/* Unicode for minus sign representing minimize */}
             </button>
           </div>
+
+          {/* Disclaimer */}
+          <div className="home-sevyai-disclaimer">
+            <p>{t('SEVY_AI_disclaimer')}</p>
+          </div>
+
+          {/* Loading Bar */}
+          {loading && (
+            <LinearProgress
+              className="loading-bar"
+              sx={{
+                '& .MuiLinearProgress-bar': {
+                  background: 'linear-gradient(90deg, #2196F3, #FF4081)', // Vivid blue and pink gradient
+                }
+              }}
+            />
+          )}
+
           <div className="chat-messages">
             {messages.map((msg, index) => (
               <div key={index} className={`chat-message ${msg.user}`}>

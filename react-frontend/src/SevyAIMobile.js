@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './SevyAIMobile.css'; // This will be the mobile-specific CSS
+import { LinearProgress } from '@mui/material'; // Import LinearProgress from JoyUI
+import './SevyAIMobile.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
 
@@ -12,9 +13,9 @@ function SevyAIMobile() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
+    const [loading, setLoading] = useState(false); // State for controlling loading bar visibility
 
     useEffect(() => {
-        // Set the document title to "SEVY AI"
         document.title = "SEVY AI";
 
         const handleOrientationChange = (e) => {
@@ -27,15 +28,12 @@ function SevyAIMobile() {
 
         const landscapeQuery = window.matchMedia("(orientation: landscape)");
 
-        // Attach listener for landscape mode
         landscapeQuery.addListener(handleOrientationChange);
 
-        // Check initial orientation
         if (!window.matchMedia("(orientation: portrait)").matches && location.pathname.includes("/sevyai-mobile")) {
             navigate('/sevyai');
         }
 
-        // Cleanup listeners on component unmount
         return () => {
             landscapeQuery.removeListener(handleOrientationChange);
         };
@@ -47,27 +45,31 @@ function SevyAIMobile() {
         const newMessage = { user: t('you'), text: input };
         setMessages([...messages, newMessage]);
         setInput('');
+        setLoading(true); // Show progress bar when message is sent
 
-        const response = await fetch('/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: input,
-                developerMode: isDeveloperMode,
-                language: i18n.language,
-            }),
-        });
-
-        const data = await response.json();
-        if (data.reply) {
-            setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: input,
+                    developerMode: isDeveloperMode,
+                    language: i18n.language,
+                }),
+            });
+            const data = await response.json();
+            if (data.reply) {
+                setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+            }
+        } finally {
+            setLoading(false); // Hide progress bar when response is received
         }
     };
 
     return (
-        <div className="sevyai-mobile-wrapper"> {/* Wrap everything inside the mobile wrapper */}
+        <div className="sevyai-mobile-wrapper">
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
@@ -103,6 +105,18 @@ function SevyAIMobile() {
                 <div className="sevyai-disclaimer">
                     <p>{t('SEVY_AI_disclaimer')}</p>
                 </div>
+
+                {/* Linear Progress Bar with Gradient */}
+                {loading && (
+                    <LinearProgress
+                        className="loading-bar"
+                        sx={{
+                            '& .MuiLinearProgress-bar': {
+                                background: 'linear-gradient(90deg, #2196F3, #FF4081)', // Vivid blue to pink
+                            }
+                        }}
+                    />
+                )}
 
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
