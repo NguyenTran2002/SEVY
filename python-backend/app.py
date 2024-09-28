@@ -29,7 +29,7 @@ def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
     try:
         response = open_ai_client.chat.completions.create(model=model,
         messages=[
-            {"role": "system", "content": "Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho học sinh Việt Nam."},
+            {"role": "system", "content": "Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính."},
             {"role": "user", "content": prompt}
         ],
         max_tokens=max_tokens,
