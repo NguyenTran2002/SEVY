@@ -132,6 +132,35 @@ function App() {
   }, [location.pathname, navigate]);
 
   useEffect(() => {
+    const fetchLocationAndSetLanguage = async () => {
+      const storedLanguage = localStorage.getItem('preferredLanguage');
+      if (storedLanguage) {
+        i18n.changeLanguage(storedLanguage);
+      } else {
+        try {
+          const response = await fetch(`https://ipinfo.io/json?token=${process.env.REACT_APP_IPINFO_TOKEN}`);
+          const data = await response.json();
+
+          const countryCode = data.country;
+          if (countryCode === 'VN') {
+            i18n.changeLanguage('vi');
+            localStorage.setItem('preferredLanguage', 'vi');
+          } else {
+            i18n.changeLanguage('en');
+            localStorage.setItem('preferredLanguage', 'en');
+          }
+        } catch (error) {
+          console.error('Failed to detect location:', error);
+          i18n.changeLanguage('en');
+          localStorage.setItem('preferredLanguage', 'en');
+        }
+      }
+    };
+
+    fetchLocationAndSetLanguage();
+  }, [i18n]);
+
+  useEffect(() => {
 
     fetchSevyEducatorsNumber().then((number) => {
       setSevyEducatorsNumber(number);
@@ -145,15 +174,12 @@ function App() {
       setStudentsTaught(number);
     });
 
-    const preferredLanguage = localStorage.getItem('preferredLanguage') || 'en';
-    i18n.changeLanguage(preferredLanguage);
-
     const timer = setTimeout(() => {
       setIsChatMinimized(false);
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [i18n]);
+  }, []);
 
   const sendMessage = async () => {
     if (input.trim() === '') return;
