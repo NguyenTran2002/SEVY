@@ -388,3 +388,41 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin: 0;
 }
+
+/* Gradient animation for SEVY AI button */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.navbar-links .sevy-ai-button {
+  background: linear-gradient(45deg, #00f, #a0f, #f0f);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  color: #fff;
+  /* Ensures the text is readable */
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  padding: 1vh 1.5vw;
+  margin-left: 1vw;
+}
+
+.navbar-links .sevy-ai-button:hover {
+  background: linear-gradient(45deg, #00f, #a0f, #f0f);
+  background-size: 200% 200%;
+  animation: gradientShift 2s ease infinite;
+  color: #fff;
+  /* Keep white text color */
+}
