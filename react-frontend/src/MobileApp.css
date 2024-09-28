@@ -185,7 +185,7 @@ body {
 }
 
 .mobile-wrapper .navbar-links .sevy-ai-button {
-    background: linear-gradient(45deg, #00f, #a0f, #f0f);
+    background: linear-gradient(45deg, #2196F3, #FF4081);
     background-size: 200% 200%;
     animation: gradientShift 4s ease infinite;
     color: #fff;
@@ -200,9 +200,9 @@ body {
 }
 
 .mobile-wrapper .navbar-links .sevy-ai-button:hover {
-    background: linear-gradient(45deg, #00f, #a0f, #f0f);
+    background: linear-gradient(45deg, #2196F3, #FF4081);
     background-size: 200% 200%;
-    animation: gradientShift 2s ease infinite;
+    animation: gradientShift 1.5s ease infinite;
     color: #fff;
     /* Keep white text color */
 }

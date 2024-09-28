@@ -70,7 +70,7 @@
     padding: 1.5vh 2vw;
     border: none;
     border-radius: 5px;
-    background-color: #b4f8c8;
+    background-color: #e6e6fa;
     cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
@@ -78,7 +78,7 @@
 }
 
 .sevyai-chat-box .chat-input button:hover {
-    background-color: #a2e8b4;
+    background-color: #d8bfd8;
 }
 
 .sevyai-chat-box .developer-mode-toggle {
@@ -90,8 +90,10 @@
 
 /* SEVY AI Banner */
 .sevyai-banner {
-    background-color: #b4f8c8;
-    color: #333;
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 12s ease infinite;
+    color: #fff;
     text-align: center;
     padding: 1vh;
     font-size: 1.5rem;
@@ -143,7 +145,7 @@
 }
 
 .sevy-ai-wrapper .navbar-links .sevy-ai-button {
-    background: linear-gradient(45deg, #00f, #a0f, #f0f);
+    background: linear-gradient(45deg, #2196F3, #FF4081);
     background-size: 200% 200%;
     animation: gradientShift 4s ease infinite;
     color: #fff;
@@ -158,9 +160,9 @@
 }
 
 .sevy-ai-wrapper .navbar-links .sevy-ai-button:hover {
-    background: linear-gradient(45deg, #00f, #a0f, #f0f);
+    background: linear-gradient(45deg, #2196F3, #FF4081);
     background-size: 200% 200%;
-    animation: gradientShift 2s ease infinite;
+    animation: gradientShift 1.5s ease infinite;
     color: #fff;
     /* Keep white text color */
 }

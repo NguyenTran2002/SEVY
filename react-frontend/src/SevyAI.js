@@ -88,7 +88,7 @@ function SevyAI() {
                     </a>
                     <div className="navbar-links">
                         <button onClick={() => navigate('/')}>{t('home')}</button>
-                        <button onClick={() => navigate('/sevyai')} className="sevy-ai-button">{t('sevy_ai')}</button>
+                        {/* <button onClick={() => navigate('/sevyai')} className="sevy-ai-button">{t('sevy_ai')}</button> */}
                         <button onClick={() => navigate('/our-team')}>{t('our_team')}</button>
                     </div>
                 </div>
