@@ -25,6 +25,21 @@ body {
   min-height: 100vh;
 }
 
+/* Gradient animation for SEVY AI button */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 /* NavBar */
 .navbar {
   display: flex;
@@ -109,7 +124,8 @@ body {
   max-width: 400px;
   z-index: 1000;
   background-color: white;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
+  border: none;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   display: flex;
@@ -120,8 +136,10 @@ body {
 
 /* Header with Minimize Button */
 .chat-box .header {
-  background-color: #b4f8c8;
-  color: #333;
+  background: linear-gradient(45deg, #2196F3, #FF4081);
+  background-size: 200% 200%;
+  animation: gradientShift 10s ease infinite;
+  color: #fff;
   padding: 1.5vh;
   text-align: center;
   font-size: 1.8rem;
@@ -152,10 +170,10 @@ body {
   position: fixed;
   bottom: 2vh;
   right: 2vw;
-  background-color: #b4f8c8;
-  /* Mint Green */
-  color: #333333;
-  /* Dark Gray Text */
+  background: linear-gradient(45deg, #2196F3, #FF4081);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  color: #fff;
   border: none;
   padding: 1rem 2rem;
   font-size: 1rem;
@@ -164,8 +182,10 @@ body {
 }
 
 .open-chat-btn:hover {
-  background-color: #a2e8b4;
-  /* Slightly darker mint green for hover effect */
+  background: linear-gradient(45deg, #2196F3, #FF4081);
+  background-size: 200% 200%;
+  animation: gradientShift 1.5s ease infinite;
+  color: #fff;
 }
 
 /* Chat messages area */
@@ -219,7 +239,7 @@ body {
   padding: 1.5vh 2vw;
   border: none;
   border-radius: 5px;
-  background-color: #b4f8c8;
+  background-color: #e6e6fa;
   cursor: pointer;
   font-weight: bold;
   font-size: 1rem;
@@ -227,7 +247,7 @@ body {
 }
 
 .chat-box .chat-input button:hover {
-  background-color: #a2e8b4;
+  background-color: #d8bfd8;
 }
 
 /* Developer Mode Toggle */
@@ -387,4 +407,27 @@ body {
   width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin: 0;
+}
+
+.navbar-links .sevy-ai-button {
+  background: linear-gradient(45deg, #2196F3, #FF4081);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  color: #fff;
+  /* Ensures the text is readable */
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  padding: 1vh 1.5vw;
+  margin-left: 1vw;
+}
+
+.navbar-links .sevy-ai-button:hover {
+  background: linear-gradient(45deg, #2196F3, #FF4081);
+  background-size: 200% 200%;
+  animation: gradientShift 1.5s ease infinite;
+  color: #fff;
+  /* Keep white text color */
 }
