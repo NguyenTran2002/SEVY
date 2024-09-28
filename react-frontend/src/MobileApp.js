@@ -63,13 +63,7 @@ function MobileApp() {
 
         // Fetch data on component mount
         fetchData();
-
-        // Retrieve language from local storage if available
-        const storedLanguage = localStorage.getItem('preferredLanguage');
-        if (storedLanguage) {
-            i18n.changeLanguage(storedLanguage);
-        }
-    }, [i18n]);
+    }, []);
 
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
