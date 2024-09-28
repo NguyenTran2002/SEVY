@@ -81,3 +81,41 @@
 .team-mobile-wrapper .navbar-right button:hover {
     background-color: #b4f8c8;
 }
+
+/* Gradient animation for SEVY AI button */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.team-mobile-wrapper .navbar-links .sevy-ai-button {
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 4s ease infinite;
+    color: #fff;
+    /* Ensures the text is readable */
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    padding: 1vh 1.5vw;
+    margin-left: 1vw;
+}
+
+.team-mobile-wrapper .navbar-links .sevy-ai-button:hover {
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 1.5s ease infinite;
+    color: #fff;
+    /* Keep white text color */
+}

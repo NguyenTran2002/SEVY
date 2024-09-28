@@ -100,7 +100,7 @@
     padding: 1.5vh 2vw;
     border: none;
     border-radius: 5px;
-    background-color: #b4f8c8;
+    background-color: #e6e6fa;
     cursor: pointer;
     font-weight: bold;
     font-size: 1rem;
@@ -108,7 +108,7 @@
 }
 
 .sevyai-mobile-wrapper .chat-input button:hover {
-    background-color: #a2e8b4;
+    background-color: #d8bfd8;
 }
 
 /* Developer Mode Toggle */
@@ -121,8 +121,10 @@
 
 /* Banner and Disclaimer */
 .sevyai-mobile-wrapper .sevyai-banner {
-    background-color: #b4f8c8;
-    color: #333;
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 10s ease infinite;
+    color: #fff;
     text-align: center;
     padding: 1vh;
     font-size: 1.5rem;
@@ -151,4 +153,42 @@
     left: 0;
     width: 100%;
     z-index: 1000;
+}
+
+/* Gradient animation for SEVY AI button */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.sevyai-mobile-wrapper .navbar-links .sevy-ai-button {
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 4s ease infinite;
+    color: #fff;
+    /* Ensures the text is readable */
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    padding: 1vh 1.5vw;
+    margin-left: 1vw;
+}
+
+.sevyai-mobile-wrapper .navbar-links .sevy-ai-button:hover {
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 1.5s ease infinite;
+    color: #fff;
+    /* Keep white text color */
 }
