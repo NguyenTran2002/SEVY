@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { LinearProgress } from '@mui/material';
 import './SevyAI.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
@@ -12,21 +13,18 @@ function SevyAI() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    // Set the document title when the component mounts
     useEffect(() => {
         document.title = "SEVY AI";
-
-        // Cleanup function to reset the title when the component unmounts
         return () => {
-            document.title = "SEVY"; // Or any default title
+            document.title = "SEVY";
         };
     }, []);
 
     useEffect(() => {
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
-
             if (e.matches) {
                 if (!currentPath.includes("/mobile")) {
                     navigate('/sevyai-mobile');
@@ -37,19 +35,15 @@ function SevyAI() {
                 }
             }
         };
-
         const portraitQuery = window.matchMedia("(orientation: portrait)");
         const landscapeQuery = window.matchMedia("(orientation: landscape)");
-
         portraitQuery.addListener(handleOrientationChange);
         landscapeQuery.addListener(handleOrientationChange);
-
         if (portraitQuery.matches && !location.pathname.includes("/mobile")) {
             navigate('/sevyai-mobile');
         } else if (landscapeQuery.matches && location.pathname.includes("/mobile")) {
             navigate('/sevyai');
         }
-
         return () => {
             portraitQuery.removeListener(handleOrientationChange);
             landscapeQuery.removeListener(handleOrientationChange);
@@ -62,22 +56,26 @@ function SevyAI() {
         const newMessage = { user: t('you'), text: input };
         setMessages([...messages, newMessage]);
         setInput('');
+        setLoading(true);  // Show the progress bar
 
-        const response = await fetch('/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: input,
-                developerMode: isDeveloperMode,
-                language: i18n.language,
-            }),
-        });
-
-        const data = await response.json();
-        if (data.reply) {
-            setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: input,
+                    developerMode: isDeveloperMode,
+                    language: i18n.language,
+                }),
+            });
+            const data = await response.json();
+            if (data.reply) {
+                setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+            }
+        } finally {
+            setLoading(false);  // Hide the progress bar when done
         }
     };
 
@@ -98,15 +96,11 @@ function SevyAI() {
                     <button onClick={() => {
                         i18n.changeLanguage('en');
                         localStorage.setItem('preferredLanguage', 'en');
-                    }}>
-                        English
-                    </button>
+                    }}>English</button>
                     <button onClick={() => {
                         i18n.changeLanguage('vi');
                         localStorage.setItem('preferredLanguage', 'vi');
-                    }}>
-                        Tiếng Việt
-                    </button>
+                    }}>Tiếng Việt</button>
                 </div>
             </nav>
 
@@ -118,6 +112,17 @@ function SevyAI() {
                 <div className="sevyai-disclaimer">
                     <p>{t('SEVY_AI_disclaimer')}</p>
                 </div>
+
+                {loading && (
+                    <LinearProgress
+                        className="loading-bar"
+                        sx={{
+                            '& .MuiLinearProgress-bar': {
+                                background: 'linear-gradient(90deg, #2196F3, #FF4081)', // Vivid blue and pink
+                            }
+                        }}
+                    />
+                )}
 
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
