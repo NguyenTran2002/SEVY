@@ -39,7 +39,7 @@ def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
         update_sevy_ai_number_of_questions_answered()
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error generating completion: {e}")
+        print(f"\nError generating completion: {e}\n", flush=True)
         return None
 
 @app.route('/chat', methods=['POST'])
@@ -64,8 +64,8 @@ def chat():
             reply = "This is a default response in developer mode."
         else:
             reply = generate_completion(message)
+            print(f"\nGenerated reply: {reply}\n", flush=True)
             reply = remove_double_stars_from_text(reply)
-        print(f"\nGenerated reply: {reply}\n", flush=True)
         return jsonify({'reply': reply})
     return jsonify({'reply': 'No message received'})
 

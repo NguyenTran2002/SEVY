@@ -88,6 +88,8 @@ function MobileApp() {
                 </div>
             </nav>
 
+            <button onClick={() => navigate('/sevyai')} className="chat-with-sevy-ai-mobile-button">{t('open_chat')}</button>
+
             <img src={cover} alt="SEVY Cover" className="introduction-image" />
             <div className="introduction-section">
                 <h2>{t('sevy_introduction_content_line_1')}</h2>
