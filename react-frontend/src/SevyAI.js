@@ -143,16 +143,18 @@ function SevyAI() {
                     <button onClick={sendMessage}>{t('send_button')}</button>
                 </div>
 
-                <div className="developer-mode-toggle">
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={isDeveloperMode}
-                            onChange={() => setIsDeveloperMode(!isDeveloperMode)}
-                        />
-                        {t('developer_mode')}
-                    </label>
-                </div>
+                {window.location.hostname === 'localhost' && (
+                    <div className="developer-mode-toggle">
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={isDeveloperMode}
+                                onChange={() => setIsDeveloperMode(!isDeveloperMode)}
+                            />
+                            {t('developer_mode')}
+                        </label>
+                    </div>
+                )}
             </div>
         </div>
     );
