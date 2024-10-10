@@ -206,3 +206,26 @@ body {
     color: #fff;
     /* Keep white text color */
 }
+
+/* Minimized Chat Button */
+.chat-with-sevy-ai-mobile-button {
+    position: fixed;
+    bottom: 2vh;
+    right: 2vw;
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.chat-with-sevy-ai-mobile-button:hover {
+    background: linear-gradient(45deg, #2196F3, #FF4081);
+    background-size: 200% 200%;
+    animation: gradientShift 1.5s ease infinite;
+    color: #fff;
+}
