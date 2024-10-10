@@ -133,12 +133,17 @@ function SevyAI() {
                 </div>
 
                 <div className="chat-input">
-                    <input
-                        type="text"
+                    <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                        onInput={(e) => {
+                            e.target.style.height = 'auto';  // Reset height
+                            e.target.style.height = e.target.scrollHeight + 'px';  // Set new height based on scroll height
+                        }}
+                        onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                         placeholder={t('type_your_message')}
+                        rows="1"  // Start with 1 row
+                        style={{ resize: 'none' }}  // Disable manual resizing
                     />
                     <button onClick={sendMessage}>{t('send_button')}</button>
                 </div>
