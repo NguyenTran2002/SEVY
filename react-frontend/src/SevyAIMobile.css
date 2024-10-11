@@ -87,13 +87,16 @@
     width: 100%;
 }
 
-.sevyai-mobile-wrapper .chat-input input {
+.sevyai-mobile-wrapper .chat-input textarea {
     flex: 1;
     padding: 1.5vh;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-right: 1vh;
     font-size: 1rem;
+    overflow: hidden;
+    resize: none;
+    /* Disable manual resizing */
 }
 
 .sevyai-mobile-wrapper .chat-input button {
