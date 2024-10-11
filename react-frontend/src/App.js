@@ -4,6 +4,7 @@ import { LinearProgress } from '@mui/material';
 import './App.css';
 import { useTranslation } from 'react-i18next';
 import './LanguageSwitcher.css';
+import { v4 as uuidv4 } from 'uuid';  // Import UUID generator
 
 import logo from './images/SEVY Logo.png';
 import cover from './images/SEVY and Students Cropped 1.jpg';
@@ -22,6 +23,17 @@ function App() {
   const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
   const [studentsTaught, setStudentsTaught] = useState(null);
 
+  // Create or reset the session ID
+  useEffect(() => {
+    const createNewSessionId = () => {
+      const sessionId = uuidv4(); // Generate a new UUID
+      localStorage.setItem('sessionId', sessionId);
+    };
+
+    // Set sessionId when entering the route
+    createNewSessionId();
+  }, [location.pathname]); // This will reset the session ID when the route changes
+
   useEffect(() => {
     // Set the document title
     document.title = "SEVY";
@@ -30,6 +42,9 @@ function App() {
     return () => {
       document.title = "SEVY";
     };
+
+    // Set first_message to true when entering the route
+    localStorage.setItem('first_message', 'true');
   }, []);
 
   const fetchSevyEducatorsNumber = async () => {
@@ -184,6 +199,8 @@ function App() {
   const sendMessage = async () => {
     if (input.trim() === '') return;
 
+    const sessionId = localStorage.getItem('sessionId');
+    const firstMessage = localStorage.getItem('first_message') === 'true';
     const newMessage = { user: t('you'), text: input };
     setMessages([...messages, newMessage]);
     setInput('');
@@ -197,8 +214,10 @@ function App() {
         },
         body: JSON.stringify({
           message: input,
+          sessionId: sessionId,
           developerMode: isDeveloperMode,
           language: i18n.language,
+          first_message: firstMessage,
         }),
       });
 
@@ -206,6 +225,9 @@ function App() {
       if (data.reply) {
         setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
       }
+
+      // After the first message is sent, set first_message to false
+      localStorage.setItem('first_message', 'false');
     } finally {
       setLoading(false); // Set loading to false when response is received
     }

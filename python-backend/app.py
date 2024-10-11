@@ -19,33 +19,69 @@ def load_api_key():
 
 open_ai_client = OpenAI(api_key=load_api_key())
 
+assistant = open_ai_client.beta.assistants.create(
+  name = "SEVY AI",
+  instructions="Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính.",
+  model="gpt-4o-mini",
+)
+
+# Store session-based threads
+thread_storage = {}
+
+# Function to get or create a thread based on the session ID
+def get_or_create_thread(session_id):
+    # Check if the session has a thread ID
+    if session_id not in thread_storage:
+        # Create a new thread for the session
+        thread = open_ai_client.beta.threads.create()
+        # Store the thread in the thread storage
+        thread_storage[session_id] = thread.id
+    return thread_storage[session_id]
+
+thread = open_ai_client.beta.threads.create()
+
 # test connection to MongoDB
 mongo_client = connect_to_mongo(debug = True)
 if mongo_client:
     mongo_client.close()
 
 # Function to generate a completion
-def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
+def generate_completion(prompt, session_id):
     try:
-        response = open_ai_client.chat.completions.create(model=model,
-        messages=[
-            {"role": "system", "content": "Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=0.7)
-        update_sevy_ai_number_of_questions_answered()
-        return response.choices[0].message.content.strip()
+        # Get or create a new thread for the session
+        thread_id = get_or_create_thread(session_id)
+
+        # Add user message to the thread
+        message = open_ai_client.beta.threads.messages.create(
+            thread_id=thread_id,
+            role="user",
+            content=prompt
+        )
+
+        # Run the assistant to get a response
+        run = open_ai_client.beta.threads.runs.create_and_poll(
+            thread_id=thread_id,
+            assistant_id=assistant.id,
+        )
+
+        if run.status == 'completed':
+            update_sevy_ai_number_of_questions_answered()
+            # Retrieve and parse the response messages
+            messages = open_ai_client.beta.threads.messages.list(thread_id=thread_id)
+            reply = messages.data[0].content[0].text.value
+            return reply
+        else:
+            print(f"Run did not complete successfully: {run.status}")
+            return "I'm sorry, I was unable to generate a response."
     except Exception as e:
-        print(f"\nError generating completion: {e}\n", flush=True)
-        return None
+        print(f"Error generating completion: {e}")
+        return "An error occurred while generating the response."
 
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
     message = data.get('message', '')
+    session_id = data.get('sessionId')
 
     # set language
     language = data.get('language', '')
@@ -63,7 +99,7 @@ def chat():
         if developer_mode:
             reply = "This is a default response in developer mode."
         else:
-            reply = generate_completion(message)
+            reply = generate_completion(message, session_id)
             print(f"\nGenerated reply: {reply}\n", flush=True)
             reply = remove_double_stars_from_text(reply)
         return jsonify({'reply': reply})
