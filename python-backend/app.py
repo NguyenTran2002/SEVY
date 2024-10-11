@@ -21,7 +21,7 @@ open_ai_client = OpenAI(api_key=load_api_key())
 
 assistant = open_ai_client.beta.assistants.create(
   name = "SEVY AI",
-  instructions="Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính.",
+  instructions="Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY (Sex Education for Vietnamese Youth) chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính.",
   model="gpt-4o-mini",
 )
 
