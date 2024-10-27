@@ -1,0 +1,137 @@
+
+# SEVY: AI-Powered Web Solution
+
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Backend](https://img.shields.io/badge/Backend-Flask-green)
+![Docker](https://img.shields.io/badge/Deployment-Docker-yellow)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-orange)
+
+Welcome to SEVY, an innovative, full-stack AI-powered solution deployed with modern technologies. This repository showcases the complete project, combining **React.js for the frontend** and **Flask for the backend**, with Docker-based deployment and MongoDB for persistent storage. Designed and deployed using AWS infrastructure, SEVY is built for scalability, efficiency, and delightful user interactions.
+
+---
+
+## 🌟 Features
+- **AI-Integrated Chat Box:** An intuitive chat box on the home page that utilizes SEVY AI to engage users, featuring a dynamic **loading bar** with JoyUI integration.
+- **User-Friendly Design:** Clean and responsive frontend built with **React**.
+- **Seamless Backend:** Python-powered **Flask API** to support robust server-side operations.
+- **Database-Driven Architecture:** Uses **MongoDB** for data persistence.
+- **Docker-Enabled Deployment:** All components are containerized using Docker, ensuring easy setup and deployment.
+- **Environment-Ready Configuration:** Uses `.env` files to manage sensitive configurations and API tokens.
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker
+- Node.js & npm
+- Python 3.x
+- MongoDB instance (local or cloud)
+
+### Installation & Setup
+
+#### Clone the Repository
+```bash
+git clone <repository-url>
+cd SEVY
+```
+
+#### Frontend Setup
+1. Navigate to the React frontend folder:
+   ```bash
+   cd react-frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+#### Backend Setup
+1. Navigate to the Python backend folder:
+   ```bash
+   cd python-backend
+   ```
+2. Install Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Start the Flask server:
+   ```bash
+   python app.py
+   ```
+
+#### Docker Setup (Optional)
+To run the entire stack using Docker:
+```bash
+docker-compose up --build
+```
+
+---
+
+## 🛠️ Project Structure
+
+```
+SEVY/
+├── LICENSE                   # Project license file
+├── docker-compose.yml        # Docker orchestration file
+├── python-backend/           # Backend service powered by Flask
+│   ├── Dockerfile            # Dockerfile for backend container
+│   ├── app.py                # Main Flask application entry point
+│   ├── helper_mongodb.py     # MongoDB helper functions
+│   ├── requirements.txt      # Backend dependencies
+│   └── testing.ipynb         # Jupyter notebook for backend testing
+└── react-frontend/           # Frontend application using React.js
+    ├── Dockerfile            # Dockerfile for frontend container
+    ├── package.json          # Frontend dependencies
+    ├── public/               # Public assets for the frontend
+    │   ├── images/           # Image resources
+    │   └── index.html        # Main HTML template
+    └── src/                  # React source code
+```
+
+---
+
+## 📂 Key Technologies Used
+- **Frontend:** React.js, JoyUI
+- **Backend:** Flask (Python), MongoDB for data management
+- **Deployment:** Docker, AWS EC2, AWS Load Balancer, NGINX
+- **Security:** SSL/TLS certificates, Amazon Certificate Manager
+- **Version Control:** Git
+- **DevOps:** Docker containers, `docker-compose` for multi-service orchestration
+
+---
+
+## 🔑 Environment Variables
+This project uses environment variables for sensitive data, such as:
+- **API Tokens** (e.g., `OpenAI`)
+
+Ensure you create the required `.env` files in both the `react-frontend` and `python-backend` directories.
+
+---
+
+## 🧪 Testing
+- The backend includes a **Jupyter notebook (`testing.ipynb`)** to help developers test the MongoDB integration and other backend logic.
+- Frontend testing is planned for future releases, with tools like **Jest** in mind.
+
+---
+
+## 💡 Future Enhancements
+- **Authentication system** with JWT or OAuth.
+- **Advanced analytics** dashboard using charting libraries.
+- **CI/CD integration** with GitHub Actions and AWS pipelines.
+- **Unit testing** coverage across the stack.
+
+---
+
+## 📧 Contact
+For inquiries, please reach out to Nguyen Tran, Founder & Strategic Director, SEVY AI:  
+🌐 [sevyai.com](https://sevyai.com)
+
+---
+
+## 🎉 Acknowledgments
+Special thanks to the **SEVY AI Management Board** for their continuous support and guidance.
