@@ -23,52 +23,27 @@ Welcome to SEVY, an innovative, full-stack AI-powered solution deployed with mod
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Docker
-- Node.js & npm
-- Python 3.x
+- Docker (will handle most other prerequisites)
 - MongoDB instance (local or cloud)
+- Relevant credentials through .env file (contact Nguyen Tran)
 
 ### Installation & Setup
 
 #### Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/NguyenTran2002/SEVY.git
 cd SEVY
 ```
 
-#### Frontend Setup
-1. Navigate to the React frontend folder:
-   ```bash
-   cd react-frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm start
-   ```
-
-#### Backend Setup
-1. Navigate to the Python backend folder:
-   ```bash
-   cd python-backend
-   ```
-2. Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Start the Flask server:
-   ```bash
-   python app.py
-   ```
-
-#### Docker Setup (Optional)
+#### Docker Setup
 To run the entire stack using Docker:
 ```bash
 docker-compose up --build
 ```
+
+#### Obtain .env Files
+To run the application, you need to obtain .env files containing relevant credentials from the author of this repository.
+Alternatively, you can set up your own OpenAI API connection, MongoDB Database, and IPInfo API connection and fork this repository accordingly.
 
 ---
 
@@ -107,7 +82,8 @@ SEVY/
 
 ## 🔑 Environment Variables
 This project uses environment variables for sensitive data, such as:
-- **API Tokens** (e.g., `OpenAI`)
+- **API Tokens** (e.g. `OpenAI`, `IPinfo`)
+- **Database Passwords** (e.g. `MongoDB`)
 
 Ensure you create the required `.env` files in both the `react-frontend` and `python-backend` directories.
 
@@ -121,15 +97,14 @@ Ensure you create the required `.env` files in both the `react-frontend` and `py
 
 ## 💡 Future Enhancements
 - **Authentication system** with JWT or OAuth.
-- **Advanced analytics** dashboard using charting libraries.
 - **CI/CD integration** with GitHub Actions and AWS pipelines.
 - **Unit testing** coverage across the stack.
 
 ---
 
 ## 📧 Contact
-For inquiries, please reach out to Nguyen Tran, Founder & Strategic Director, SEVY AI:  
-🌐 [sevyai.com](https://sevyai.com)
+For inquiries, please reach out to Nguyen Tran, Director of Technology, SEVY: 
+📧 [director.office@sevyai.com](mailto:director.office@sevyai.com)
 
 ---
 
