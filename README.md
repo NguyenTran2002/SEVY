@@ -109,4 +109,4 @@ For inquiries, please reach out to Nguyen Tran, Director of Technology, SEVY:
 ---
 
 ## 🎉 Acknowledgments
-Special thanks to the **SEVY AI Management Board** for their continuous support and guidance.
+Special thanks to the **SEVY Management Board** for their continuous support and guidance.
