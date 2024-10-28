@@ -8,6 +8,8 @@
 
 Welcome to SEVY, an innovative, full-stack AI-powered solution deployed with modern technologies. This repository showcases the complete project, combining **React.js for the frontend** and **Flask for the backend**, with Docker-based deployment and MongoDB for persistent storage. Designed and deployed using AWS infrastructure, SEVY is built for scalability, efficiency, and delightful user interactions.
 
+Our website is live at [sevyai.com](https://sevyai.com/).
+
 ---
 
 ## 🌟 Features
