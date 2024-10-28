@@ -4,7 +4,8 @@
 ![React](https://img.shields.io/badge/Frontend-React-blue)
 ![Backend](https://img.shields.io/badge/Backend-Flask-green)
 ![Docker](https://img.shields.io/badge/Deployment-Docker-yellow)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-orange)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-teal)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white)
 
 Welcome to SEVY, an innovative, full-stack AI-powered solution deployed with modern technologies. This repository showcases the complete project, combining **React.js for the frontend** and **Flask for the backend**, with Docker-based deployment and MongoDB for persistent storage. Designed and deployed using AWS infrastructure, SEVY is built for scalability, efficiency, and delightful user interactions.
 
