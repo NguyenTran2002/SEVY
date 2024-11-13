@@ -18,6 +18,14 @@ services:
     networks:
       - SEVY_network
 
+  frontend-v2:
+    build:
+      context: ./frontend-v2
+    ports:
+      - "3001:3001"
+    networks:
+      - SEVY_network
+
 networks:
   SEVY_network:
     driver: bridge

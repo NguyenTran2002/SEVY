@@ -1,0 +1,84 @@
+{
+  "name": "otis-kit-pro",
+  "version": "2.0.2",
+  "private": true,
+  "author": "Creative Tim",
+  "license": "See license in https://www.creative-tim.com/license",
+  "description": "Otis Kit PRO by Creative Tim",
+  "homepage": "https://demos.creative-tim.com/otis-kit-pro/#/",
+  "bugs": {
+    "url": "https://github.com/creativetimofficial/ct-otis-kit-pro/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativetimofficial/ct-otis-kit-pro.git"
+  },
+  "dependencies": {
+    "@emotion/cache": "11.13.1",
+    "@emotion/react": "11.13.3",
+    "@emotion/styled": "11.13.0",
+    "@mui/icons-material": "5.6.2",
+    "@mui/material": "5.6.4",
+    "@mui/styled-engine": "5.6.1",
+    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/react": "13.2.0",
+    "@testing-library/user-event": "14.5.2",
+    "ajv": "7.2.4",
+    "chroma-js": "2.4.2",
+    "flatpickr": "4.6.13",
+    "prop-types": "15.8.1",
+    "react": "18.3.1",
+    "react-copy-to-clipboard": "5.1.0",
+    "react-countup": "6.5.3",
+    "react-dom": "18.3.1",
+    "react-flatpickr": "3.10.13",
+    "react-router-dom": "6.26.1",
+    "react-scripts": "5.0.1",
+    "react-syntax-highlighter": "15.5.0",
+    "rellax": "1.12.1",
+    "swiper": "7.3.4",
+    "typed.js": "2.0.12",
+    "uuid": "8.3.2",
+    "web-vitals": "2.1.4"
+  },
+  "scripts": {
+    "start": "PORT=3001 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-private-property-in-object": "^7.24.7",
+    "eslint": "8.15.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-jsx-a11y": "6.9.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "prettier": "2.6.2"
+  },
+  "overrides": {
+    "svgo": "3.3.2"
+  }
+}
