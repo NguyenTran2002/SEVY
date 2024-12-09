@@ -345,6 +345,13 @@ function App() {
           {t('open_chat')}
         </button>
       )}
+
+      {/* Contact Us Section */}
+      <div className="contact-section">
+        <h2>{t('contact_us')}</h2>
+        <p>Email: <a href="mailto:director@sevyai.com">director@sevyai.com</a></p>
+        <p>Facebook: <a href="https://facebook.com/sevynonprofit" target="_blank" rel="noopener noreferrer">facebook.com/sevynonprofit</a></p>
+      </div>
     </div>
   );
 }

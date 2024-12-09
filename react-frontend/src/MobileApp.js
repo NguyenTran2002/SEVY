@@ -48,17 +48,21 @@ function MobileApp() {
 
         // Fetch data for mobile site
         const fetchData = async () => {
-            const sevyEducatorsResponse = await fetch('/get_sevy_educators_number', { method: 'POST' });
-            const sevyEducatorsData = await sevyEducatorsResponse.json();
-            setSevyEducatorsNumber(sevyEducatorsData.sevy_educators_number);
+            try {
+                const sevyEducatorsResponse = await fetch('/get_sevy_educators_number', { method: 'POST' });
+                const sevyEducatorsData = await sevyEducatorsResponse.json();
+                setSevyEducatorsNumber(sevyEducatorsData.sevy_educators_number);
 
-            const sevyAiAnswersResponse = await fetch('/get_sevy_ai_answers', { method: 'POST' });
-            const sevyAiAnswersData = await sevyAiAnswersResponse.json();
-            setSevyAiAnswers(sevyAiAnswersData.sevy_ai_answers);
+                const sevyAiAnswersResponse = await fetch('/get_sevy_ai_answers', { method: 'POST' });
+                const sevyAiAnswersData = await sevyAiAnswersResponse.json();
+                setSevyAiAnswers(sevyAiAnswersData.sevy_ai_answers);
 
-            const studentsTaughtResponse = await fetch('/get_students_taught', { method: 'POST' });
-            const studentsTaughtData = await studentsTaughtResponse.json();
-            setStudentsTaught(studentsTaughtData.students_taught);
+                const studentsTaughtResponse = await fetch('/get_students_taught', { method: 'POST' });
+                const studentsTaughtData = await studentsTaughtResponse.json();
+                setStudentsTaught(studentsTaughtData.students_taught);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         };
 
         // Fetch data on component mount
@@ -119,6 +123,13 @@ function MobileApp() {
                         <p>{studentsTaught}</p>
                     </div>
                 </div>
+            </div>
+
+            {/* Contact Us Section */}
+            <div className="contact-section">
+                <h2>{t('contact_us')}</h2>
+                <p>Email: <a href="mailto:director@sevyai.com">director@sevyai.com</a></p>
+                <p>Facebook: <a href="https://facebook.com/sevynonprofit" target="_blank" rel="noopener noreferrer">facebook.com/sevynonprofit</a></p>
             </div>
         </div>
     );
