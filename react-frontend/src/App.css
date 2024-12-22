@@ -193,6 +193,7 @@ body {
   margin-bottom: 1vh;
   padding: 1vh;
   border-radius: 5px;
+  word-wrap: break-word;
 }
 
 .chat-box .chat-message.You,
