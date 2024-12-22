@@ -216,7 +216,7 @@ function App() {
   return (
     <div className="App">
 
-      {/* Helmet wwrapper for site preview */}
+      {/* Helmet wrapper for site preview */}
       <Helmet>
         <title>SEVY - Sex Education for Vietnamese Youth</title>
         <meta
