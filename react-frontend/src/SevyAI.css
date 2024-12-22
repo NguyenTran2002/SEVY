@@ -29,6 +29,8 @@
     margin-bottom: 1vh;
     padding: 1vh;
     border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .sevyai-chat-box .chat-message.You,

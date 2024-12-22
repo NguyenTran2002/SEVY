@@ -29,7 +29,7 @@ def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
     try:
         response = open_ai_client.chat.completions.create(model=model,
         messages=[
-            {"role": "system", "content": "Bạn là SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính."},
+            {"role": "system", "content": "Bạn là trợ lý ảo SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính. Nhiệm vụ của bạn là tạo cho người hỏi cảm giác an toàn và tin tưởng. Cố gắng đưa cho người hỏi giải pháp thực tế thay vì bảo họ tìm đến nơi khác để giải đáp thắc mắc."},
             {"role": "user", "content": prompt}
         ],
         max_tokens=max_tokens,
@@ -51,10 +51,10 @@ def chat():
     language = data.get('language', '')
     print(f"Detected language: {language}", flush=True)
     if language == 'en':
-        message = "Answer concisely in English even if the question is not in English: " + message
+        message = "Answer in English even if the question is not in English: " + message
         print("Detected English language.", flush=True)
     else:
-        message = "Trả lời ngắn gọn bằng tiếng Việt kể cả nếu câu hỏi không là tiếng việt: " + message
+        message = "Trả lời bằng tiếng Việt kể cả nếu câu hỏi không là tiếng Việt: " + message
         print("Detected Vietnamese language.", flush=True)
 
     developer_mode = data.get('developerMode', False)
