@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { Helmet } from 'react-helmet';
 import { LinearProgress } from '@mui/material';
 import './App.css';
 import { useTranslation } from 'react-i18next';
@@ -214,6 +215,24 @@ function App() {
 
   return (
     <div className="App">
+
+      {/* Helmet wwrapper for site preview */}
+      <Helmet>
+        <title>SEVY - Sex Education for Vietnamese Youth</title>
+        <meta
+          name="description"
+          content="SEVY is a nonprofit providing free sex education for Vietnamese youth."
+        />
+        <meta property="og:title" content="SEVY - Sex Education for Vietnamese Youth" />
+        <meta
+          property="og:description"
+          content="SEVY is a nonprofit providing free sex education for Vietnamese youth."
+        />
+        <meta property="og:image" content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png" />
+        <meta property="og:url" content="https://sevyai.com" />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       {/* Navigation Bar */}
       <nav className="navbar">
         <div className="navbar-left">
