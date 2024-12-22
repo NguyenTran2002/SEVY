@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { Helmet } from 'react-helmet';
 import { LinearProgress } from '@mui/material';
 import './SevyAI.css';
 import { useTranslation } from 'react-i18next';
@@ -82,6 +83,24 @@ function SevyAI() {
 
     return (
         <div className="sevy-ai-wrapper">
+
+            {/* Helmet wrapper for site preview */}
+            <Helmet>
+                <title>SEVY AI</title>
+                <meta
+                    name="description"
+                    content="SEVY AI is a private and free chatbot that answers any sex-education-related question."
+                />
+                <meta property="og:title" content="SEVY - Sex Education for Vietnamese Youth" />
+                <meta
+                    property="og:description"
+                    content="SEVY AI is a private and free chatbot that answers any sex-education-related question."
+                />
+                <meta property="og:image" content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png" />
+                <meta property="og:url" content="https://sevyai.com/sevyai" />
+                <meta property="og:type" content="website" />
+            </Helmet>
+
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
