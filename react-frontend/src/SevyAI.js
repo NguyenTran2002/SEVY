@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import { LinearProgress } from '@mui/material';
 import './SevyAI.css';
 import { useTranslation } from 'react-i18next';
@@ -127,7 +128,8 @@ function SevyAI() {
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
                         <div key={index} className={`chat-message ${msg.user}`}>
-                            <strong>{msg.user}: </strong>{msg.text}
+                            <strong>{msg.user}: </strong>
+                            <ReactMarkdown>{msg.text}</ReactMarkdown>
                         </div>
                     ))}
                 </div>

@@ -65,7 +65,6 @@ def chat():
         else:
             reply = generate_completion(message)
             print(f"\nGenerated reply: {reply}\n", flush=True)
-            reply = remove_double_stars_from_text(reply)
         return jsonify({'reply': reply})
     return jsonify({'reply': 'No message received'})
 
@@ -128,8 +127,6 @@ def get_students_taught():
 
 # -----------------------
 # AUXILLARY FUNCTIONS SECTION
-def remove_double_stars_from_text(text):
-    return text.replace("**", "")
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
