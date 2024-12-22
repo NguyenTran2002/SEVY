@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import team from './images/SEVY Team.jpg';
 import core_team from './images/Core Team.jpg';
 import './team-mobile.css'; // Import mobile CSS
@@ -17,6 +18,24 @@ const TeamMobile = () => {
 
     return (
         <div className="team-mobile-wrapper">  {/* Unique wrapper for team mobile */}
+
+            {/* Helmet wrapper for site preview */}
+            <Helmet>
+                <title>SEVY's Team</title>
+                <meta
+                    name="description"
+                    content="SEVY's Team."
+                />
+                <meta property="og:title" content="SEVY's Team" />
+                <meta
+                    property="og:description"
+                    content="SEVY's Team"
+                />
+                <meta property="og:image" content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png" />
+                <meta property="og:url" content="https://sevyai.com//our-team" />
+                <meta property="og:type" content="website" />
+            </Helmet>
+
             <nav className="navbar">
                 <div className="navbar-left">
                     <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>

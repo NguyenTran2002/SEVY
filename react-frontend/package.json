@@ -14,7 +14,8 @@
     "@mui/material": "^5.x",
     "@emotion/react": "^11.x",
     "@emotion/styled": "^11.x",
-    "react-markdown": "^8.0.1"
+    "react-markdown": "^8.0.1",
+    "react-helmet": "^6.1.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.18.6"
