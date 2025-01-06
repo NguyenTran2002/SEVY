@@ -133,3 +133,4 @@ def update_sevy_ai_number_of_questions_answered():
         )
     else:
         print("Document with sevy_ai_answers not found.")
+    client.close()
