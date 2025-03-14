@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet';
@@ -18,6 +18,7 @@ function SevyAI() {
     const [loading, setLoading] = useState(false);
 
     const [isComposing, setIsComposing] = useState(false);
+    const chatMessagesRef = useRef(null);
 
     useEffect(() => {
         document.title = "SEVY AI";
@@ -25,6 +26,15 @@ function SevyAI() {
             document.title = "SEVY";
         };
     }, []);
+
+    useEffect(() => {
+        if (chatMessagesRef.current) {
+            chatMessagesRef.current.scrollTo({
+                top: chatMessagesRef.current.scrollHeight,
+                behavior: 'smooth',
+            });
+        }
+    }, [messages]);
 
     useEffect(() => {
         const handleOrientationChange = (e) => {
@@ -146,7 +156,7 @@ function SevyAI() {
                     />
                 )}
 
-                <div className="chat-messages">
+                <div className="chat-messages" ref={chatMessagesRef}>
                     {messages.map((msg, index) => (
                         <div key={index} className={`chat-message ${msg.user}`}>
                             <strong>{msg.user}: </strong>
