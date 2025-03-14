@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet';
@@ -17,12 +17,25 @@ function SevyAI() {
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const [isComposing, setIsComposing] = useState(false);
+    const chatMessagesRef = useRef(null);
+    const textAreaRef = useRef(null);
+
     useEffect(() => {
         document.title = "SEVY AI";
         return () => {
             document.title = "SEVY";
         };
     }, []);
+
+    useEffect(() => {
+        if (chatMessagesRef.current) {
+            chatMessagesRef.current.scrollTo({
+                top: chatMessagesRef.current.scrollHeight,
+                behavior: 'smooth',
+            });
+        }
+    }, [messages]);
 
     useEffect(() => {
         const handleOrientationChange = (e) => {
@@ -58,6 +71,12 @@ function SevyAI() {
         const newMessage = { user: t('you'), text: input };
         setMessages([...messages, newMessage]);
         setInput('');
+
+        // Reset textarea to default height
+        if (textAreaRef.current) {
+            textAreaRef.current.style.height = 'auto';
+        }
+
         setLoading(true);  // Show the progress bar
 
         try {
@@ -144,7 +163,7 @@ function SevyAI() {
                     />
                 )}
 
-                <div className="chat-messages">
+                <div className="chat-messages" ref={chatMessagesRef}>
                     {messages.map((msg, index) => (
                         <div key={index} className={`chat-message ${msg.user}`}>
                             <strong>{msg.user}: </strong>
@@ -155,16 +174,25 @@ function SevyAI() {
 
                 <div className="chat-input">
                     <textarea
+                        ref={textAreaRef}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onInput={(e) => {
-                            e.target.style.height = 'auto';  // Reset height
-                            e.target.style.height = e.target.scrollHeight + 'px';  // Set new height based on scroll height
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
                         }}
-                        onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                        onCompositionStart={() => setIsComposing(true)}
+                        onCompositionEnd={() => setIsComposing(false)}
+                        onKeyDown={(e) => {
+                            // If Enter is pressed, no shift key is held, and we're NOT composing text
+                            if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        }}
                         placeholder={t('type_your_message')}
-                        rows="1"  // Start with 1 row
-                        style={{ resize: 'none' }}  // Disable manual resizing
+                        rows="1"
+                        style={{ resize: 'none' }}
                     />
                     <button onClick={sendMessage}>{t('send_button')}</button>
                 </div>
