@@ -17,6 +17,8 @@ function SevyAI() {
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const [isComposing, setIsComposing] = useState(false);
+
     useEffect(() => {
         document.title = "SEVY AI";
         return () => {
@@ -158,13 +160,21 @@ function SevyAI() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onInput={(e) => {
-                            e.target.style.height = 'auto';  // Reset height
-                            e.target.style.height = e.target.scrollHeight + 'px';  // Set new height based on scroll height
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
                         }}
-                        onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                        onCompositionStart={() => setIsComposing(true)}
+                        onCompositionEnd={() => setIsComposing(false)}
+                        onKeyDown={(e) => {
+                            // If Enter is pressed, no shift key is held, and we're NOT composing text
+                            if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        }}
                         placeholder={t('type_your_message')}
-                        rows="1"  // Start with 1 row
-                        style={{ resize: 'none' }}  // Disable manual resizing
+                        rows="1"
+                        style={{ resize: 'none' }}
                     />
                     <button onClick={sendMessage}>{t('send_button')}</button>
                 </div>

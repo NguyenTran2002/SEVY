@@ -20,15 +20,16 @@ function App() {
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isChatMinimized, setIsChatMinimized] = useState(true);
+
   const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
   const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
   const [studentsTaught, setStudentsTaught] = useState(null);
 
-  useEffect(() => {
-    // Set the document title
-    document.title = "SEVY";
+  // Track IME composition (for languages like Vietnamese)
+  const [isComposing, setIsComposing] = useState(false);
 
-    // Cleanup function to reset title on unmount if needed
+  useEffect(() => {
+    document.title = "SEVY";
     return () => {
       document.title = "SEVY";
     };
@@ -43,11 +44,9 @@ function App() {
         },
         body: JSON.stringify({})
       });
-
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const data = await response.json();
       console.log('Sevy Educators Number:', data.sevy_educators_number);
       return data.sevy_educators_number;
@@ -65,11 +64,9 @@ function App() {
         },
         body: JSON.stringify({})
       });
-
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const data = await response.json();
       console.log('Sevy AI Answers:', data.sevy_ai_answers);
       return data.sevy_ai_answers;
@@ -87,11 +84,9 @@ function App() {
         },
         body: JSON.stringify({})
       });
-
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const data = await response.json();
       console.log('Students Taught Number:', data.students_taught);
       return data.students_taught;
@@ -103,7 +98,6 @@ function App() {
   useEffect(() => {
     const handleOrientationChange = (e) => {
       const currentPath = location.pathname;
-
       if (e.matches) {
         if (!currentPath.includes("/mobile")) {
           navigate('/mobile');
@@ -142,7 +136,6 @@ function App() {
         try {
           const response = await fetch(`https://ipinfo.io/json?token=${process.env.REACT_APP_IPINFO_TOKEN}`);
           const data = await response.json();
-
           const countryCode = data.country;
           if (countryCode === 'VN') {
             i18n.changeLanguage('vi');
@@ -163,7 +156,6 @@ function App() {
   }, [i18n]);
 
   useEffect(() => {
-
     fetchSevyEducatorsNumber().then((number) => {
       setSevyEducatorsNumber(number);
     });
@@ -176,10 +168,10 @@ function App() {
       setStudentsTaught(number);
     });
 
+    // Auto-open the chat box after 3 seconds
     const timer = setTimeout(() => {
       setIsChatMinimized(false);
     }, 3000);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -189,7 +181,7 @@ function App() {
     const newMessage = { user: t('you'), text: input };
     setMessages([...messages, newMessage]);
     setInput('');
-    setLoading(true); // Set loading to true when message is sent
+    setLoading(true);
 
     try {
       const response = await fetch('/chat', {
@@ -203,19 +195,17 @@ function App() {
           language: i18n.language,
         }),
       });
-
       const data = await response.json();
       if (data.reply) {
         setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
       }
     } finally {
-      setLoading(false); // Set loading to false when response is received
+      setLoading(false);
     }
   };
 
   return (
     <div className="App">
-
       {/* Helmet wrapper for site preview */}
       <Helmet>
         <title>SEVY - Sex Education for Vietnamese Youth</title>
@@ -228,7 +218,10 @@ function App() {
           property="og:description"
           content="SEVY is a nonprofit providing free sex education for Vietnamese youth."
         />
-        <meta property="og:image" content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png" />
+        <meta
+          property="og:image"
+          content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png"
+        />
         <meta property="og:url" content="https://sevyai.com" />
         <meta property="og:type" content="website" />
       </Helmet>
@@ -236,26 +229,38 @@ function App() {
       {/* Navigation Bar */}
       <nav className="navbar">
         <div className="navbar-left">
-          <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
+          <a
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.replace('/');
+            }}
+          >
             <img src={logo} alt="SEVY Logo" className="navbar-logo" />
           </a>
           <div className="navbar-links">
             <button onClick={() => navigate('/')}>{t('home')}</button>
-            <button onClick={() => navigate('/sevyai')} className="sevy-ai-button">{t('sevy_ai')}</button>
+            <button onClick={() => navigate('/sevyai')} className="sevy-ai-button">
+              {t('sevy_ai')}
+            </button>
             <button onClick={() => navigate('/our-team')}>{t('our_team')}</button>
           </div>
         </div>
         <div className="navbar-right">
-          <button onClick={() => {
-            i18n.changeLanguage('en');
-            localStorage.setItem('preferredLanguage', 'en'); // Store the selected language
-          }}>
+          <button
+            onClick={() => {
+              i18n.changeLanguage('en');
+              localStorage.setItem('preferredLanguage', 'en');
+            }}
+          >
             English
           </button>
-          <button onClick={() => {
-            i18n.changeLanguage('vi');
-            localStorage.setItem('preferredLanguage', 'vi'); // Store the selected language
-          }}>
+          <button
+            onClick={() => {
+              i18n.changeLanguage('vi');
+              localStorage.setItem('preferredLanguage', 'vi');
+            }}
+          >
             Tiếng Việt
           </button>
         </div>
@@ -296,12 +301,12 @@ function App() {
       </div>
 
       {/* Chat Box */}
-      {!isChatMinimized && (  // Show chat box only when it's not minimized
+      {!isChatMinimized && (
         <div className="chat-box">
           <div className="header">
             SEVY AI
             <button className="minimize-btn" onClick={() => setIsChatMinimized(true)}>
-              &#x2212; {/* Unicode for minus sign representing minimize */}
+              &#x2212;
             </button>
           </div>
 
@@ -316,8 +321,8 @@ function App() {
               className="loading-bar"
               sx={{
                 '& .MuiLinearProgress-bar': {
-                  background: 'linear-gradient(90deg, #2196F3, #FF4081)', // Vivid blue and pink gradient
-                }
+                  background: 'linear-gradient(90deg, #2196F3, #FF4081)',
+                },
               }}
             />
           )}
@@ -336,16 +341,25 @@ function App() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onInput={(e) => {
-                e.target.style.height = 'auto';  // Reset height
-                e.target.style.height = e.target.scrollHeight + 'px';  // Set new height based on scroll height
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
               }}
-              onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
+              onKeyDown={(e) => {
+                // Only send on Enter if IME composition has ended
+                if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
               placeholder={t('type_your_message')}
-              rows="1"  // Start with 1 row
-              style={{ resize: 'none' }}  // Disable manual resizing
+              rows="1"
+              style={{ resize: 'none' }}
             />
             <button onClick={sendMessage}>{t('send_button')}</button>
           </div>
+
           {window.location.hostname === 'localhost' && (
             <div className="developer-mode-toggle">
               <label>
@@ -371,8 +385,19 @@ function App() {
       {/* Contact Us Section */}
       <div className="contact-section">
         <h2>{t('contact_us')}</h2>
-        <p>Email: <a href="mailto:director@sevyai.com">director@sevyai.com</a></p>
-        <p>Facebook: <a href="https://facebook.com/sevynonprofit" target="_blank" rel="noopener noreferrer">facebook.com/sevynonprofit</a></p>
+        <p>
+          Email: <a href="mailto:director@sevyai.com">director@sevyai.com</a>
+        </p>
+        <p>
+          Facebook:{' '}
+          <a
+            href="https://facebook.com/sevynonprofit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            facebook.com/sevynonprofit
+          </a>
+        </p>
       </div>
     </div>
   );
