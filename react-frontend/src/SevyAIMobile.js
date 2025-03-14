@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet';
@@ -16,16 +16,17 @@ function SevyAIMobile() {
     const [messages, setMessages] = useState([]);
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    // Track whether the user is in the middle of composing (IME active)
     const [isComposing, setIsComposing] = useState(false);
+
+    // Ref for smooth scrolling
+    const chatMessagesRef = useRef(null);
 
     useEffect(() => {
         document.title = "SEVY AI";
 
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
-            // If orientation is not portrait and we're on the mobile page, navigate to the desktop page
+            // If orientation is not portrait and we're on mobile route, go to desktop route
             if (!e.matches && currentPath.includes("/sevyai-mobile")) {
                 navigate('/sevyai');
             }
@@ -35,10 +36,7 @@ function SevyAIMobile() {
         landscapeQuery.addListener(handleOrientationChange);
 
         // If already in landscape on mount, switch to the desktop page
-        if (
-            !window.matchMedia("(orientation: portrait)").matches &&
-            location.pathname.includes("/sevyai-mobile")
-        ) {
+        if (!window.matchMedia("(orientation: portrait)").matches && location.pathname.includes("/sevyai-mobile")) {
             navigate('/sevyai');
         }
 
@@ -46,6 +44,16 @@ function SevyAIMobile() {
             landscapeQuery.removeListener(handleOrientationChange);
         };
     }, [location.pathname, navigate]);
+
+    // 2) Smoothly scroll down whenever messages change
+    useEffect(() => {
+        if (chatMessagesRef.current) {
+            chatMessagesRef.current.scrollTo({
+                top: chatMessagesRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+    }, [messages]);
 
     const sendMessage = async () => {
         if (input.trim() === '') return;
@@ -69,9 +77,9 @@ function SevyAIMobile() {
             });
             const data = await response.json();
             if (data.reply) {
-                setMessages((prev) => [
+                setMessages(prev => [
                     ...prev,
-                    { user: t('SEVY_AI'), text: data.reply },
+                    { user: t('SEVY_AI'), text: data.reply }
                 ]);
             }
         } finally {
@@ -113,7 +121,6 @@ function SevyAIMobile() {
                     </a>
                     <div className="navbar-links">
                         <button onClick={() => navigate('/')}>{t('home')}</button>
-                        {/* <button onClick={() => navigate('/sevyai')} className="sevy-ai-button">{t('sevy_ai')}</button> */}
                         <button onClick={() => navigate('/our-team')}>{t('our_team')}</button>
                     </div>
                 </div>
@@ -157,7 +164,8 @@ function SevyAIMobile() {
                     />
                 )}
 
-                <div className="chat-messages">
+                {/* 3) Attach the ref to your .chat-messages container */}
+                <div className="chat-messages" ref={chatMessagesRef}>
                     {messages.map((msg, index) => (
                         <div key={index} className={`chat-message ${msg.user}`}>
                             <strong>{msg.user}: </strong>
@@ -177,7 +185,6 @@ function SevyAIMobile() {
                         onCompositionStart={() => setIsComposing(true)}
                         onCompositionEnd={() => setIsComposing(false)}
                         onKeyDown={(e) => {
-                            // Only send on Enter if not composing
                             if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
                                 e.preventDefault();
                                 sendMessage();

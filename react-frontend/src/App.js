@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet';
@@ -28,12 +28,25 @@ function App() {
   // Track IME composition (for languages like Vietnamese)
   const [isComposing, setIsComposing] = useState(false);
 
+  // Ref for smooth-scrolling to the bottom of the chat
+  const chatMessagesRef = useRef(null)
+
   useEffect(() => {
     document.title = "SEVY";
     return () => {
       document.title = "SEVY";
     };
   }, []);
+
+  // Smooth scroll whenever 'messages' changes
+  useEffect(() => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTo({
+        top: chatMessagesRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages]);
 
   const fetchSevyEducatorsNumber = async () => {
     try {
@@ -327,7 +340,7 @@ function App() {
             />
           )}
 
-          <div className="chat-messages">
+          <div className="chat-messages" ref={chatMessagesRef}>
             {messages.map((msg, index) => (
               <div key={index} className={`chat-message ${msg.user}`}>
                 <strong>{msg.user}: </strong>
