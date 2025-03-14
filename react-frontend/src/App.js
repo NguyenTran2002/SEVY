@@ -31,6 +31,8 @@ function App() {
   // Ref for smooth-scrolling to the bottom of the chat
   const chatMessagesRef = useRef(null)
 
+  const textAreaRef = useRef(null);
+
   useEffect(() => {
     document.title = "SEVY";
     return () => {
@@ -194,6 +196,12 @@ function App() {
     const newMessage = { user: t('you'), text: input };
     setMessages([...messages, newMessage]);
     setInput('');
+
+    // Reset the textarea’s height after clearing `input`
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = 'auto';
+    }
+
     setLoading(true);
 
     try {
@@ -351,6 +359,7 @@ function App() {
 
           <div className="chat-input">
             <textarea
+              ref={textAreaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onInput={(e) => {

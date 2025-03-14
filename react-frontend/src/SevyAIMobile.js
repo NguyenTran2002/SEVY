@@ -18,8 +18,8 @@ function SevyAIMobile() {
     const [loading, setLoading] = useState(false);
     const [isComposing, setIsComposing] = useState(false);
 
-    // Ref for smooth scrolling
     const chatMessagesRef = useRef(null);
+    const textAreaRef = useRef(null);
 
     useEffect(() => {
         document.title = "SEVY AI";
@@ -61,6 +61,13 @@ function SevyAIMobile() {
         const newMessage = { user: t('you'), text: input };
         setMessages([...messages, newMessage]);
         setInput('');
+
+        // Reset textarea to default height
+        if (textAreaRef.current) {
+            textAreaRef.current.style.height = 'auto';
+        }
+
+
         setLoading(true);
 
         try {
@@ -176,6 +183,7 @@ function SevyAIMobile() {
 
                 <div className="chat-input">
                     <textarea
+                        ref={textAreaRef}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onInput={(e) => {

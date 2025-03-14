@@ -19,6 +19,7 @@ function SevyAI() {
 
     const [isComposing, setIsComposing] = useState(false);
     const chatMessagesRef = useRef(null);
+    const textAreaRef = useRef(null);
 
     useEffect(() => {
         document.title = "SEVY AI";
@@ -70,6 +71,12 @@ function SevyAI() {
         const newMessage = { user: t('you'), text: input };
         setMessages([...messages, newMessage]);
         setInput('');
+
+        // Reset textarea to default height
+        if (textAreaRef.current) {
+            textAreaRef.current.style.height = 'auto';
+        }
+
         setLoading(true);  // Show the progress bar
 
         try {
@@ -167,6 +174,7 @@ function SevyAI() {
 
                 <div className="chat-input">
                     <textarea
+                        ref={textAreaRef}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onInput={(e) => {
