@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Helmet } from 'react-helmet';
-import { LinearProgress } from '@mui/material'; // Import LinearProgress from JoyUI
+import { LinearProgress } from '@mui/material';
 import './SevyAIMobile.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
@@ -15,24 +15,30 @@ function SevyAIMobile() {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
-    const [loading, setLoading] = useState(false); // State for controlling loading bar visibility
+    const [loading, setLoading] = useState(false);
+
+    // Track whether the user is in the middle of composing (IME active)
+    const [isComposing, setIsComposing] = useState(false);
 
     useEffect(() => {
         document.title = "SEVY AI";
 
         const handleOrientationChange = (e) => {
             const currentPath = location.pathname;
-
+            // If orientation is not portrait and we're on the mobile page, navigate to the desktop page
             if (!e.matches && currentPath.includes("/sevyai-mobile")) {
                 navigate('/sevyai');
             }
         };
 
         const landscapeQuery = window.matchMedia("(orientation: landscape)");
-
         landscapeQuery.addListener(handleOrientationChange);
 
-        if (!window.matchMedia("(orientation: portrait)").matches && location.pathname.includes("/sevyai-mobile")) {
+        // If already in landscape on mount, switch to the desktop page
+        if (
+            !window.matchMedia("(orientation: portrait)").matches &&
+            location.pathname.includes("/sevyai-mobile")
+        ) {
             navigate('/sevyai');
         }
 
@@ -47,7 +53,7 @@ function SevyAIMobile() {
         const newMessage = { user: t('you'), text: input };
         setMessages([...messages, newMessage]);
         setInput('');
-        setLoading(true); // Show progress bar when message is sent
+        setLoading(true);
 
         try {
             const response = await fetch('/chat', {
@@ -63,17 +69,18 @@ function SevyAIMobile() {
             });
             const data = await response.json();
             if (data.reply) {
-                setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+                setMessages((prev) => [
+                    ...prev,
+                    { user: t('SEVY_AI'), text: data.reply },
+                ]);
             }
         } finally {
-            setLoading(false); // Hide progress bar when response is received
+            setLoading(false);
         }
     };
 
     return (
         <div className="sevyai-mobile-wrapper">
-
-            {/* Helmet wrapper for site preview */}
             <Helmet>
                 <title>SEVY AI</title>
                 <meta
@@ -85,14 +92,23 @@ function SevyAIMobile() {
                     property="og:description"
                     content="SEVY AI is a private and free chatbot that answers any sex-education-related question."
                 />
-                <meta property="og:image" content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png" />
+                <meta
+                    property="og:image"
+                    content="https://sevyai.com/static/media/SEVY%20Logo.bf6ce28e.png"
+                />
                 <meta property="og:url" content="https://sevyai.com/sevyai" />
                 <meta property="og:type" content="website" />
             </Helmet>
 
             <nav className="navbar">
                 <div className="navbar-left">
-                    <a href="/" onClick={(e) => { e.preventDefault(); window.location.replace('/'); }}>
+                    <a
+                        href="/"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.location.replace('/');
+                        }}
+                    >
                         <img src={logo} alt="SEVY Logo" className="navbar-logo" />
                     </a>
                     <div className="navbar-links">
@@ -102,16 +118,20 @@ function SevyAIMobile() {
                     </div>
                 </div>
                 <div className="navbar-right">
-                    <button onClick={() => {
-                        i18n.changeLanguage('en');
-                        localStorage.setItem('preferredLanguage', 'en');
-                    }}>
+                    <button
+                        onClick={() => {
+                            i18n.changeLanguage('en');
+                            localStorage.setItem('preferredLanguage', 'en');
+                        }}
+                    >
                         English
                     </button>
-                    <button onClick={() => {
-                        i18n.changeLanguage('vi');
-                        localStorage.setItem('preferredLanguage', 'vi');
-                    }}>
+                    <button
+                        onClick={() => {
+                            i18n.changeLanguage('vi');
+                            localStorage.setItem('preferredLanguage', 'vi');
+                        }}
+                    >
                         Tiếng Việt
                     </button>
                 </div>
@@ -126,14 +146,13 @@ function SevyAIMobile() {
                     <p>{t('SEVY_AI_disclaimer')}</p>
                 </div>
 
-                {/* Linear Progress Bar with Gradient */}
                 {loading && (
                     <LinearProgress
                         className="loading-bar"
                         sx={{
                             '& .MuiLinearProgress-bar': {
-                                background: 'linear-gradient(90deg, #2196F3, #FF4081)', // Vivid blue to pink
-                            }
+                                background: 'linear-gradient(90deg, #2196F3, #FF4081)',
+                            },
                         }}
                     />
                 )}
@@ -152,13 +171,21 @@ function SevyAIMobile() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onInput={(e) => {
-                            e.target.style.height = 'auto';  // Reset height
-                            e.target.style.height = e.target.scrollHeight + 'px';  // Set new height based on scroll height
+                            e.target.style.height = 'auto';
+                            e.target.style.height = e.target.scrollHeight + 'px';
                         }}
-                        onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                        onCompositionStart={() => setIsComposing(true)}
+                        onCompositionEnd={() => setIsComposing(false)}
+                        onKeyDown={(e) => {
+                            // Only send on Enter if not composing
+                            if (e.key === 'Enter' && !e.shiftKey && !isComposing) {
+                                e.preventDefault();
+                                sendMessage();
+                            }
+                        }}
                         placeholder={t('type_your_message')}
-                        rows="1"  // Start with 1 row
-                        style={{ resize: 'none' }}  // Disable manual resizing
+                        rows="1"
+                        style={{ resize: 'none' }}
                     />
                     <button onClick={sendMessage}>{t('send_button')}</button>
                 </div>
