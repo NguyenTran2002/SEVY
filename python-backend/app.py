@@ -25,7 +25,7 @@ if mongo_client:
     mongo_client.close()
 
 # Function to generate a completion
-def generate_completion(prompt, model="gpt-4o-mini", max_tokens=1000):
+def generate_completion(prompt, model="gpt-4.1-nano-2025-04-14", max_tokens=1000):
     try:
         response = open_ai_client.chat.completions.create(model=model,
         messages=[
