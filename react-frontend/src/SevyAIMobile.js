@@ -10,6 +10,7 @@ import logo from './images/SEVY Logo.png';
 function SevyAIMobile() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
     const location = useLocation();
 
     const [input, setInput] = useState('');
@@ -71,7 +72,7 @@ function SevyAIMobile() {
         setLoading(true);
 
         try {
-            const response = await fetch('/chat', {
+            const response = await fetch(`${API_BASE_URL}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

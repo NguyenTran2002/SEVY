@@ -9,6 +9,7 @@ import cover from './images/SEVY and Students Cropped 1.jpg';
 function MobileApp() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
 
     const [sevyEducatorsNumber, setSevyEducatorsNumber] = useState(null);
     const [sevyAiAnswers, setSevyAiAnswers] = useState(null);
@@ -50,15 +51,15 @@ function MobileApp() {
         // Fetch data for mobile site
         const fetchData = async () => {
             try {
-                const sevyEducatorsResponse = await fetch('/get_sevy_educators_number', { method: 'POST' });
+                const sevyEducatorsResponse = await fetch(`${API_BASE_URL}/get_sevy_educators_number`, { method: 'POST' });
                 const sevyEducatorsData = await sevyEducatorsResponse.json();
                 setSevyEducatorsNumber(sevyEducatorsData.sevy_educators_number);
 
-                const sevyAiAnswersResponse = await fetch('/get_sevy_ai_answers', { method: 'POST' });
+                const sevyAiAnswersResponse = await fetch(`${API_BASE_URL}/get_sevy_ai_answers`, { method: 'POST' });
                 const sevyAiAnswersData = await sevyAiAnswersResponse.json();
                 setSevyAiAnswers(sevyAiAnswersData.sevy_ai_answers);
 
-                const studentsTaughtResponse = await fetch('/get_students_taught', { method: 'POST' });
+                const studentsTaughtResponse = await fetch(`${API_BASE_URL}/get_students_taught`, { method: 'POST' });
                 const studentsTaughtData = await studentsTaughtResponse.json();
                 setStudentsTaught(studentsTaughtData.students_taught);
             } catch (error) {

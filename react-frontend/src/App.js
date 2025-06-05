@@ -10,6 +10,8 @@ import './LanguageSwitcher.css';
 import logo from './images/SEVY Logo.png';
 import cover from './images/SEVY and Students Cropped 1.jpg';
 
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
+
 function App() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ function App() {
 
   const fetchSevyEducatorsNumber = async () => {
     try {
-      const response = await fetch('/get_sevy_educators_number', {
+      const response = await fetch(`${API_BASE_URL}/get_sevy_educators_number`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ function App() {
 
   const fetchSevyAiAnswers = async () => {
     try {
-      const response = await fetch('/get_sevy_ai_answers', {
+      const response = await fetch(`${API_BASE_URL}/get_sevy_ai_answers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +94,7 @@ function App() {
 
   const fetchStudentsTaught = async () => {
     try {
-      const response = await fetch('/get_students_taught', {
+      const response = await fetch(`${API_BASE_URL}/get_students_taught`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -205,7 +207,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch('/chat', {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
