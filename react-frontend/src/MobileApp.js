@@ -69,7 +69,7 @@ function MobileApp() {
 
         // Fetch data on component mount
         fetchData();
-    }, []);
+    }, [API_BASE_URL]);
 
     const handleLanguageChange = (lang) => {
         i18n.changeLanguage(lang);
