@@ -1,23 +1,20 @@
-# Use an official node image as the base image
-FROM node:16
-
-# Set the working directory
+FROM node:16-alpine AS builder
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install dependencies
-RUN npm install
+ENV GENERATE_SOURCEMAP=false
+ENV NODE_ENV=production
+ENV CI=true
 
-# Copy the rest of the application code
 COPY . .
-
-# Build the application
 RUN npm run build
 
-# Expose port 3000
-EXPOSE 3000
+FROM nginx:stable-alpine AS production
 
-# Start the application
-CMD ["npm", "start"]
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=builder /app/build /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
