@@ -50,9 +50,9 @@ function App() {
     }
   }, [messages]);
 
-  const fetchSevyEducatorsNumber = async () => {
+  const fetchAllNumbers = async () => {
     try {
-      const response = await fetch('/get_sevy_educators_number', {
+      const response = await fetch('/get_all_numbers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,50 +63,15 @@ function App() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log('Sevy Educators Number:', data.sevy_educators_number);
-      return data.sevy_educators_number;
+      console.log('All SEVY Numbers:', data);
+      return data;
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
-    }
-  };
-
-  const fetchSevyAiAnswers = async () => {
-    try {
-      const response = await fetch('/get_sevy_ai_answers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({})
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log('Sevy AI Answers:', data.sevy_ai_answers);
-      return data.sevy_ai_answers;
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  };
-
-  const fetchStudentsTaught = async () => {
-    try {
-      const response = await fetch('/get_students_taught', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({})
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      console.log('Students Taught Number:', data.students_taught);
-      return data.students_taught;
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
+      return {
+        sevy_educators_number: 'N/A',
+        sevy_ai_answers: 'N/A',
+        students_taught: 'N/A'
+      };
     }
   };
 
@@ -171,16 +136,10 @@ function App() {
   }, [i18n]);
 
   useEffect(() => {
-    fetchSevyEducatorsNumber().then((number) => {
-      setSevyEducatorsNumber(number);
-    });
-
-    fetchSevyAiAnswers().then((number) => {
-      setSevyAiAnswers(number);
-    });
-
-    fetchStudentsTaught().then((number) => {
-      setStudentsTaught(number);
+    fetchAllNumbers().then((data) => {
+      setSevyEducatorsNumber(data.sevy_educators_number);
+      setSevyAiAnswers(data.sevy_ai_answers);
+      setStudentsTaught(data.students_taught);
     });
 
     // Auto-open the chat box after 3 seconds

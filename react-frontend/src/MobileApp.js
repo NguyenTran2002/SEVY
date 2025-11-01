@@ -50,19 +50,24 @@ function MobileApp() {
         // Fetch data for mobile site
         const fetchData = async () => {
             try {
-                const sevyEducatorsResponse = await fetch('/get_sevy_educators_number', { method: 'POST' });
-                const sevyEducatorsData = await sevyEducatorsResponse.json();
-                setSevyEducatorsNumber(sevyEducatorsData.sevy_educators_number);
+                const response = await fetch('/get_all_numbers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
+                console.log('All SEVY Numbers:', data);
 
-                const sevyAiAnswersResponse = await fetch('/get_sevy_ai_answers', { method: 'POST' });
-                const sevyAiAnswersData = await sevyAiAnswersResponse.json();
-                setSevyAiAnswers(sevyAiAnswersData.sevy_ai_answers);
-
-                const studentsTaughtResponse = await fetch('/get_students_taught', { method: 'POST' });
-                const studentsTaughtData = await studentsTaughtResponse.json();
-                setStudentsTaught(studentsTaughtData.students_taught);
+                setSevyEducatorsNumber(data.sevy_educators_number);
+                setSevyAiAnswers(data.sevy_ai_answers);
+                setStudentsTaught(data.students_taught);
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setSevyEducatorsNumber('N/A');
+                setSevyAiAnswers('N/A');
+                setStudentsTaught('N/A');
             }
         };
 

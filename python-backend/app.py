@@ -5,6 +5,7 @@ import os
 from openai import OpenAI
 from helper_mongodb import *
 from helper_mongodb import connect_to_mongo
+import time
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -14,15 +15,20 @@ def load_api_key():
         print("\n\nError: No .env file found in the repository.\n\n")
         return None, None
 
-    load_dotenv()
+    load_dotenv(override=True)
     return os.getenv('openai_api_key')
 
 open_ai_client = OpenAI(api_key=load_api_key())
 
-# test connection to MongoDB
-mongo_client = connect_to_mongo(debug = True)
-if mongo_client:
-    mongo_client.close()
+# Global MongoDB connection pool - reused across all requests
+mongo_client = connect_to_mongo()
+
+# Cache for numbers data (30 second TTL)
+numbers_cache = {
+    'data': None,
+    'timestamp': 0,
+    'ttl': 30  # seconds
+}
 
 # Function to generate a completion
 def generate_completion(prompt, model="gpt-4.1-nano-2025-04-14", max_tokens=1000):
@@ -68,62 +74,113 @@ def chat():
         return jsonify({'reply': reply})
     return jsonify({'reply': 'No message received'})
 
+@app.route('/get_all_numbers', methods=['POST'])
+def get_all_numbers():
+    """
+    Combined endpoint to fetch all SEVY numbers in a single query.
+    Implements 30-second in-memory caching for performance.
+    """
+    print("Getting all SEVY numbers...", flush=True)
+
+    # Check cache validity
+    current_time = time.time()
+    if numbers_cache['data'] and (current_time - numbers_cache['timestamp']) < numbers_cache['ttl']:
+        print("Returning cached numbers", flush=True)
+        return jsonify(numbers_cache['data'])
+
+    # Cache miss or expired - fetch from database
+    try:
+        db = mongo_client["SEVY_database"]
+        collection = db["SEVY_numbers"]
+
+        # Fetch all documents from SEVY_numbers collection
+        all_docs = list(collection.find({}))
+
+        # Initialize default values
+        result = {
+            'sevy_educators_number': 'N/A',
+            'sevy_ai_answers': 'N/A',
+            'students_taught': 'N/A'
+        }
+
+        # Parse documents to extract values
+        for doc in all_docs:
+            if 'sevy_educators_number' in doc:
+                result['sevy_educators_number'] = doc['sevy_educators_number']
+            if 'sevy_ai_answers' in doc:
+                result['sevy_ai_answers'] = doc['sevy_ai_answers']
+            if 'students_taught' in doc:
+                result['students_taught'] = doc['students_taught']
+
+        print(f"Fetched numbers: {result}", flush=True)
+
+        # Update cache
+        numbers_cache['data'] = result
+        numbers_cache['timestamp'] = current_time
+
+        return jsonify(result)
+
+    except Exception as e:
+        print(f"Error fetching numbers: {e}", flush=True)
+        return jsonify({
+            'sevy_educators_number': 'N/A',
+            'sevy_ai_answers': 'N/A',
+            'students_taught': 'N/A'
+        })
+
 @app.route('/get_sevy_educators_number', methods=['POST'])
 def get_sevy_educators_number():
 
     print("Getting sevy_educators_number value...", flush=True)
 
-    # Connect to MongoDB
-    db_client = connect_to_mongo()
-    if db_client:
-        db = db_client["SEVY_database"]
+    # Use global MongoDB connection pool
+    try:
+        db = mongo_client["SEVY_database"]
         collection = db["SEVY_numbers"]
         query = {"sevy_educators_number": {"$exists": True}}
         document = collection.find_one(query)
         sevy_educators_number = document["sevy_educators_number"]
         print(f"sevy_educators_number value: {sevy_educators_number}", flush=True)
-        db_client.close()
         return jsonify({'sevy_educators_number': sevy_educators_number})
-    db_client.close()
-    return jsonify({'sevy_educators_number': 'N/A'})
+    except Exception as e:
+        print(f"Error: {e}", flush=True)
+        return jsonify({'sevy_educators_number': 'N/A'})
 
 @app.route('/get_sevy_ai_answers', methods=['POST'])
 def get_sevy_ai_answers():
 
-    print("Getting sevy_educators_number value...", flush=True)
+    print("Getting sevy_ai_answers value...", flush=True)
 
-    # Connect to MongoDB
-    db_client = connect_to_mongo()
-    if db_client:
-        db = db_client["SEVY_database"]
+    # Use global MongoDB connection pool
+    try:
+        db = mongo_client["SEVY_database"]
         collection = db["SEVY_numbers"]
         query = {"sevy_ai_answers": {"$exists": True}}
         document = collection.find_one(query)
         sevy_ai_answers = document["sevy_ai_answers"]
         print(f"sevy_ai_answers value: {sevy_ai_answers}", flush=True)
-        db_client.close()
         return jsonify({'sevy_ai_answers': sevy_ai_answers})
-    db_client.close()
-    return jsonify({'sevy_ai_answers': 'N/A'})
+    except Exception as e:
+        print(f"Error: {e}", flush=True)
+        return jsonify({'sevy_ai_answers': 'N/A'})
 
 @app.route('/get_students_taught', methods=['POST'])
 def get_students_taught():
 
-    print("Getting sevy_educators_number value...", flush=True)
+    print("Getting students_taught value...", flush=True)
 
-    # Connect to MongoDB
-    db_client = connect_to_mongo()
-    if db_client:
-        db = db_client["SEVY_database"]
+    # Use global MongoDB connection pool
+    try:
+        db = mongo_client["SEVY_database"]
         collection = db["SEVY_numbers"]
         query = {"students_taught": {"$exists": True}}
         document = collection.find_one(query)
         students_taught = document["students_taught"]
-        print(f"sevy_ai_answers value: {students_taught}", flush=True)
-        db_client.close()
+        print(f"students_taught value: {students_taught}", flush=True)
         return jsonify({'students_taught': students_taught})
-    db_client.close()
-    return jsonify({'students_taught': 'N/A'})
+    except Exception as e:
+        print(f"Error: {e}", flush=True)
+        return jsonify({'students_taught': 'N/A'})
 
 # -----------------------
 # AUXILLARY FUNCTIONS SECTION
