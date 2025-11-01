@@ -16,7 +16,11 @@ function App() {
   const location = useLocation();
 
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(() => {
+    // Load messages from sessionStorage on component mount
+    const savedMessages = sessionStorage.getItem('sevyai_chat_messages_home');
+    return savedMessages ? JSON.parse(savedMessages) : [];
+  });
   const [isDeveloperMode, setIsDeveloperMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isChatMinimized, setIsChatMinimized] = useState(true);
@@ -48,6 +52,11 @@ function App() {
         behavior: 'smooth',
       });
     }
+  }, [messages]);
+
+  // Save messages to sessionStorage whenever they change (for persistence across minimize/refresh)
+  useEffect(() => {
+    sessionStorage.setItem('sevyai_chat_messages_home', JSON.stringify(messages));
   }, [messages]);
 
   const fetchAllNumbers = async () => {
@@ -152,11 +161,14 @@ function App() {
   const sendMessage = async () => {
     if (input.trim() === '') return;
 
-    const newMessage = { user: t('you'), text: input };
-    setMessages([...messages, newMessage]);
+    // Create new user message in display format
+    const newUserMessage = { user: t('you'), text: input, role: 'user', content: input };
+    const updatedMessages = [...messages, newUserMessage];
+
+    setMessages(updatedMessages);
     setInput('');
 
-    // Reset the textarea’s height after clearing `input`
+    // Reset the textarea's height after clearing `input`
     if (textAreaRef.current) {
       textAreaRef.current.style.height = 'auto';
     }
@@ -164,24 +176,60 @@ function App() {
     setLoading(true);
 
     try {
+      // Convert messages to OpenAI format (role/content) for API
+      // Implement sliding window: keep only last 5 message pairs (10 messages)
+      const conversationHistory = updatedMessages.map(msg => ({
+        role: msg.role || (msg.user === t('you') ? 'user' : 'assistant'),
+        content: msg.content || msg.text
+      }));
+
+      // Apply sliding window: keep only last 10 messages (5 pairs)
+      const MAX_MESSAGES = 10;
+      const trimmedHistory = conversationHistory.length > MAX_MESSAGES
+        ? conversationHistory.slice(-MAX_MESSAGES)
+        : conversationHistory;
+
       const response = await fetch('/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: input,
+          messages: trimmedHistory,
           developerMode: isDeveloperMode,
           language: i18n.language,
         }),
       });
+
       const data = await response.json();
       if (data.reply) {
-        setMessages([...messages, newMessage, { user: t('SEVY_AI'), text: data.reply }]);
+        // Create AI response message in display format
+        const aiMessage = {
+          user: t('SEVY_AI'),
+          text: data.reply,
+          role: 'assistant',
+          content: data.reply
+        };
+        setMessages([...updatedMessages, aiMessage]);
       }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage = {
+        user: t('SEVY_AI'),
+        text: 'Sorry, I encountered an error. Please try again.',
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.'
+      };
+      setMessages([...updatedMessages, errorMessage]);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Clear chat function for privacy
+  const clearChat = () => {
+    setMessages([]);
+    sessionStorage.removeItem('sevyai_chat_messages_home');
   };
 
   return (
@@ -285,9 +333,19 @@ function App() {
         <div className="chat-box">
           <div className="header">
             SEVY AI
-            <button className="minimize-btn" onClick={() => setIsChatMinimized(true)}>
-              &#x2212;
-            </button>
+            <div>
+              <button
+                className="clear-chat-btn"
+                onClick={clearChat}
+                title={t('clear_chat') || 'Clear chat'}
+                style={{ marginRight: '8px', fontSize: '12px' }}
+              >
+                🗑️
+              </button>
+              <button className="minimize-btn" onClick={() => setIsChatMinimized(true)}>
+                &#x2212;
+              </button>
+            </div>
           </div>
 
           {/* Disclaimer */}

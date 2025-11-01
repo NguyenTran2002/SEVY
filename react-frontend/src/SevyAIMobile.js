@@ -13,7 +13,11 @@ function SevyAIMobile() {
     const location = useLocation();
 
     const [input, setInput] = useState('');
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(() => {
+        // Load messages from sessionStorage on component mount
+        const savedMessages = sessionStorage.getItem('sevyai_chat_messages_mobile');
+        return savedMessages ? JSON.parse(savedMessages) : [];
+    });
     const [isDeveloperMode, setIsDeveloperMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isComposing, setIsComposing] = useState(false);
@@ -45,7 +49,7 @@ function SevyAIMobile() {
         };
     }, [location.pathname, navigate]);
 
-    // 2) Smoothly scroll down whenever messages change
+    // Smoothly scroll down whenever messages change
     useEffect(() => {
         if (chatMessagesRef.current) {
             chatMessagesRef.current.scrollTo({
@@ -55,11 +59,19 @@ function SevyAIMobile() {
         }
     }, [messages]);
 
+    // Save messages to sessionStorage whenever they change
+    useEffect(() => {
+        sessionStorage.setItem('sevyai_chat_messages_mobile', JSON.stringify(messages));
+    }, [messages]);
+
     const sendMessage = async () => {
         if (input.trim() === '') return;
 
-        const newMessage = { user: t('you'), text: input };
-        setMessages([...messages, newMessage]);
+        // Create new user message in display format
+        const newUserMessage = { user: t('you'), text: input, role: 'user', content: input };
+        const updatedMessages = [...messages, newUserMessage];
+
+        setMessages(updatedMessages);
         setInput('');
 
         // Reset textarea to default height
@@ -67,31 +79,63 @@ function SevyAIMobile() {
             textAreaRef.current.style.height = 'auto';
         }
 
-
         setLoading(true);
 
         try {
+            // Convert messages to OpenAI format (role/content) for API
+            // Implement sliding window: keep only last 5 message pairs (10 messages)
+            const conversationHistory = updatedMessages.map(msg => ({
+                role: msg.role || (msg.user === t('you') ? 'user' : 'assistant'),
+                content: msg.content || msg.text
+            }));
+
+            // Apply sliding window: keep only last 10 messages (5 pairs)
+            const MAX_MESSAGES = 10;
+            const trimmedHistory = conversationHistory.length > MAX_MESSAGES
+                ? conversationHistory.slice(-MAX_MESSAGES)
+                : conversationHistory;
+
             const response = await fetch('/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    message: input,
+                    messages: trimmedHistory,
                     developerMode: isDeveloperMode,
                     language: i18n.language,
                 }),
             });
+
             const data = await response.json();
             if (data.reply) {
-                setMessages(prev => [
-                    ...prev,
-                    { user: t('SEVY_AI'), text: data.reply }
-                ]);
+                // Create AI response message in display format
+                const aiMessage = {
+                    user: t('SEVY_AI'),
+                    text: data.reply,
+                    role: 'assistant',
+                    content: data.reply
+                };
+                setMessages([...updatedMessages, aiMessage]);
             }
+        } catch (error) {
+            console.error('Error sending message:', error);
+            const errorMessage = {
+                user: t('SEVY_AI'),
+                text: 'Sorry, I encountered an error. Please try again.',
+                role: 'assistant',
+                content: 'Sorry, I encountered an error. Please try again.'
+            };
+            setMessages([...updatedMessages, errorMessage]);
         } finally {
             setLoading(false);
         }
+    };
+
+    // Clear chat function for privacy
+    const clearChat = () => {
+        setMessages([]);
+        sessionStorage.removeItem('sevyai_chat_messages_mobile');
     };
 
     return (
@@ -154,6 +198,26 @@ function SevyAIMobile() {
             <div className="sevyai-chat-box full-screen">
                 <div className="sevyai-banner">
                     <h1>SEVY AI</h1>
+                    <button
+                        className="clear-chat-btn"
+                        onClick={clearChat}
+                        title={t('clear_chat') || 'Clear chat'}
+                        style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            background: '#f44336',
+                            color: 'white',
+                            border: 'none',
+                            padding: '6px 12px',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '12px'
+                        }}
+                    >
+                        🗑️
+                    </button>
                 </div>
 
                 <div className="sevyai-disclaimer">

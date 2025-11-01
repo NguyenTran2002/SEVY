@@ -30,18 +30,43 @@ numbers_cache = {
     'ttl': 30  # seconds
 }
 
-# Function to generate a completion
-def generate_completion(prompt, model="gpt-4.1-nano-2025-04-14", max_tokens=1000):
+# Function to generate a completion with conversation history
+def generate_completion(messages_history, language='vi', model="gpt-4.1-nano-2025-04-14", max_tokens=1000):
+    """
+    Generate AI completion with conversation context.
+
+    Args:
+        messages_history: List of message objects with 'role' and 'content'
+        language: 'en' or 'vi' to set response language
+        model: OpenAI model to use
+        max_tokens: Maximum tokens in response
+
+    Returns:
+        AI response string or None on error
+    """
     try:
-        response = open_ai_client.chat.completions.create(model=model,
-        messages=[
-            {"role": "system", "content": "Bạn là trợ lý ảo SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính. Nhiệm vụ của bạn là tạo cho người hỏi cảm giác an toàn và tin tưởng. Cố gắng đưa cho người hỏi giải pháp thực tế thay vì bảo họ tìm đến nơi khác để giải đáp thắc mắc."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=max_tokens,
-        n=1,
-        stop=None,
-        temperature=0.7)
+        # Base system message (Vietnamese sex education assistant)
+        base_system_message = "Bạn là trợ lý ảo SEVY AI, tạo ra bởi tổ chức phi lợi nhuận SEVY chuyên về giáo dục giới tính (Sex Education) cho trẻ em Việt Nam. Bạn sẽ KHÔNG trả lời những câu hỏi không thuộc chủ đề giáo dục giới tính. Nhiệm vụ của bạn là tạo cho người hỏi cảm giác an toàn và tin tưởng. Cố gắng đưa cho người hỏi giải pháp thực tế thay vì bảo họ tìm đến nơi khác để giải đáp thắc mắc."
+
+        # Add language instruction to system message
+        if language == 'en':
+            system_message = base_system_message + " IMPORTANT: Answer in English even if the question is not in English."
+        else:
+            system_message = base_system_message + " QUAN TRỌNG: Trả lời bằng tiếng Việt kể cả nếu câu hỏi không là tiếng Việt."
+
+        # Build messages array: system message + conversation history
+        messages_for_api = [{"role": "system", "content": system_message}]
+        messages_for_api.extend(messages_history)
+
+        response = open_ai_client.chat.completions.create(
+            model=model,
+            messages=messages_for_api,
+            max_tokens=max_tokens,
+            n=1,
+            stop=None,
+            temperature=0.7
+        )
+
         update_sevy_ai_number_of_questions_answered()
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -50,29 +75,56 @@ def generate_completion(prompt, model="gpt-4.1-nano-2025-04-14", max_tokens=1000
 
 @app.route('/chat', methods=['POST'])
 def chat():
+    """
+    Chat endpoint with conversation history support.
+    Accepts either:
+    - Legacy format: {"message": "...", "language": "...", "developerMode": false}
+    - New format: {"messages": [...], "language": "...", "developerMode": false}
+
+    Implements sliding window: keeps only last 5 message pairs (10 messages total)
+    """
     data = request.get_json()
-    message = data.get('message', '')
-
-    # set language
-    language = data.get('language', '')
-    print(f"Detected language: {language}", flush=True)
-    if language == 'en':
-        message = "Answer in English even if the question is not in English: " + message
-        print("Detected English language.", flush=True)
-    else:
-        message = "Trả lời bằng tiếng Việt kể cả nếu câu hỏi không là tiếng Việt: " + message
-        print("Detected Vietnamese language.", flush=True)
-
+    language = data.get('language', 'vi')
     developer_mode = data.get('developerMode', False)
 
-    if message:
-        if developer_mode:
-            reply = "This is a default response in developer mode."
-        else:
-            reply = generate_completion(message)
+    print(f"Detected language: {language}", flush=True)
+
+    # Support both legacy single message and new messages array format
+    messages_history = data.get('messages', [])
+    legacy_message = data.get('message', '')
+
+    # If legacy format, convert to messages array
+    if legacy_message and not messages_history:
+        messages_history = [{"role": "user", "content": legacy_message}]
+        print("Using legacy single-message format", flush=True)
+
+    # Validate messages array
+    if not messages_history or not isinstance(messages_history, list):
+        return jsonify({'reply': 'No message received'})
+
+    # Implement sliding window: keep only last 5 message pairs (10 messages)
+    # This ensures we don't exceed token limits and optimize costs
+    MAX_MESSAGES = 10  # 5 user + 5 assistant pairs
+    if len(messages_history) > MAX_MESSAGES:
+        messages_history = messages_history[-MAX_MESSAGES:]
+        print(f"Applied sliding window: trimmed to last {MAX_MESSAGES} messages", flush=True)
+
+    print(f"Processing conversation with {len(messages_history)} messages", flush=True)
+
+    # Developer mode bypass
+    if developer_mode:
+        reply = "This is a default response in developer mode."
+        print("Developer mode active - returning default response", flush=True)
+    else:
+        # Generate AI response with full conversation context
+        reply = generate_completion(messages_history, language=language)
+        if reply:
             print(f"\nGenerated reply: {reply}\n", flush=True)
-        return jsonify({'reply': reply})
-    return jsonify({'reply': 'No message received'})
+        else:
+            reply = "Sorry, I encountered an error processing your request."
+            print("Error: generate_completion returned None", flush=True)
+
+    return jsonify({'reply': reply})
 
 @app.route('/get_all_numbers', methods=['POST'])
 def get_all_numbers():
