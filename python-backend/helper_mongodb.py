@@ -21,17 +21,17 @@ def load_user_password():
     """
     if not os.path.isfile('.env'):
         print("\n\nError: No .env file found in the repository.\n\n")
-        return None, None
+        return None, None, None
 
-    load_dotenv()
+    load_dotenv(override=True)
     return os.getenv('username'), os.getenv('password'), os.getenv('server_address')
 
 def connect_to_mongo(username = None, password = None, server_address = None, debug = False):
     """
     DESCRIPTION:
         Return the MongoClient object
-        Will load username, password, and server_address from the .env file
-            if not provided as arguments.
+        Will load username, password, and server_address from environment variables
+        or the .env file if not provided as arguments.
 
     INPUT SIGNATURE:
         username: MongoDB username (string)
@@ -45,15 +45,18 @@ def connect_to_mongo(username = None, password = None, server_address = None, de
         Manually setting username, password, and server_address
         when calling this function is highly discouraged. They are intended
         only to be used for quick connection to different MongoDB deployments
-        when testing the application. The recommended way is to modify them
-        from the .env file that should be in the same directory as this file.
+        when testing the application. The recommended way is to set them via
+        environment variables (for cloud deployments) or the .env file (for
+        local development).
     """
 
-    if (username is None) or (password is None) or (server_address is None):
+    # If credentials not provided as arguments, try environment variables first
+    # then fall back to .env file (for local development)
+    if not username or not password or not server_address:
         username, password, server_address = load_user_password()
-        uri = "mongodb+srv://" + username + ":" + password + server_address
 
-    uri = "mongodb+srv://" + username + ":" + password + server_address
+    # Construct MongoDB connection URI
+    uri = f"mongodb+srv://{username}:{password}{server_address}"
     client = MongoClient(uri, server_api=ServerApi('1'))
 
     # Send a ping to confirm a successful connection
