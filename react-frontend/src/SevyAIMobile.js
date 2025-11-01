@@ -103,7 +103,6 @@ function SevyAIMobile() {
                 body: JSON.stringify({
                     messages: trimmedHistory,
                     developerMode: isDeveloperMode,
-                    language: i18n.language,
                 }),
             });
 
