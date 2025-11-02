@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/branding/logo.png?v=1" />
+    <link rel="apple-touch-icon" href="/branding/logo.png?v=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SEVY: Sex Education for Vietnamese Youth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'sevy-blue': '#a2d2ff',
+              'sevy-blue-dark': '#6b9dcc',
+              'sevy-pink': '#ffc8dd',
+              'sevy-pink-dark': '#c58c9f',
+              'sevy-pink-light': '#FFF0F5',
+              'sevy-bg': '#fff7fb',
+              'sevy-text': '#1f2937',
+              'sevy-text-secondary': '#4b5563',
+            },
+            fontFamily: {
+              sans: ['ibrand', 'Poppins', 'sans-serif'],
+            },
+            keyframes: {
+              'pulse-once': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.1)' },
+              },
+              'fade-in-up': {
+                'from': {
+                  opacity: '0',
+                  transform: 'translateY(20px)'
+                },
+                'to': {
+                  opacity: '1',
+                  transform: 'translateY(0)'
+                }
+              },
+              'heartbeat': {
+                '0%, 100%': { transform: 'scale(1)' },
+                '50%': { transform: 'scale(1.05)' },
+              },
+            },
+            animation: {
+              'pulse-once': 'pulse-once 0.5s ease-in-out',
+              'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
+              'heartbeat': 'heartbeat 2.5s ease-in-out infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      @font-face {
+        font-family: 'ibrand';
+        src: url('/branding/ibrand.woff2') format('woff2'),
+             url('/branding/ibrand.otf') format('opentype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      body {
+        font-family: 'ibrand', 'Poppins', 'sans-serif';
+      }
+
+      /* === Vietnamese Font Adjustments === */
+      
+      /* 1. Apply a global font size reduction for Vietnamese text.
+         The Helvetica font used for Vietnamese is visually larger than the default
+         iBrand font. This scales all rem-based text down slightly to compensate. */
+      html[lang="vi"] {
+        font-size: 80%; /* Increased reduction for a more noticeable effect */
+      }
+
+      /* 2. Set the default font family for Vietnamese. */
+      html[lang="vi"] body {
+        font-family: 'Helvetica', 'Poppins', 'sans-serif';
+      }
+      
+      /* 3. Adjust language switcher font size when page is in Vietnamese
+         to compensate for global scaling. It's smaller on mobile. */
+      html[lang="vi"] .language-switcher-button-text {
+        font-size: 1.25rem; /* Target: 1rem (text-base) -> 1 / 0.8 */
+      }
+
+      @media (min-width: 1024px) {
+        html[lang="vi"] .language-switcher-button-text {
+          font-size: 1.40625rem; /* Target: 1.125rem (text-lg) -> 1.125 / 0.8 */
+        }
+      }
+
+      /* 4. Preserve the perfected state of the hero title (#hero-title).
+         These rules counteract the global 80% scaling to ensure the hero title's
+         font size is precisely maintained: the custom smaller size on mobile,
+         and the original full size on desktop. */
+      
+      /* Base rule (mobile): Restores the perfected 1.9rem size */
+      html[lang="vi"] #hero-title {
+        font-size: 2.375rem;      /* Target: 1.9rem -> 1.9 / 0.8 */
+        line-height: 2.625rem;    /* Target: 2.1rem -> 2.1 / 0.8 */
+      }
+    
+      /* Tablet override: Restores the original 3.75rem size */
+      @media (min-width: 640px) {
+        html[lang="vi"] #hero-title {
+          font-size: 4.6875rem;   /* Target: 3.75rem -> 3.75 / 0.8 */
+          line-height: 1;
+        }
+      }
+    
+      /* Desktop override: Restores the original 4.5rem size */
+      @media (min-width: 1280px) {
+        html[lang="vi"] #hero-title {
+          font-size: 5.625rem;   /* Target: 4.5rem -> 4.5 / 0.8 */
+          line-height: 1;
+        }
+      }
+
+      /* === Custom App-wide Styles === */
+      .chat-background {
+        background-color: #feFCFD; /* Slightly off-white from sevy-bg */
+        background-image: radial-gradient(#a2d2ff 0.5px, transparent 0.5px);
+        background-size: 20px 20px;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #d1e8ff;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #ffc8dd;
+      }
+      
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+
+      /* Ensure links in markdown are styled correctly */
+      .prose a {
+        color: #1d4ed8;
+      }
+      .prose a:hover {
+        color: #1e40af;
+      }
+      
+      .ai-bubble-gradient {
+        position: relative;
+        overflow: hidden;
+      }
+      .ai-bubble-gradient::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(to bottom, #ffc8dd, #a2d2ff);
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+      }
+      
+      /* === Loading Dots Animation === */
+      @keyframes loading-dots {
+        0%, 100% {
+          opacity: 0.4;
+          transform: scale(0.9);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .loading-dot {
+        animation: loading-dots 1.4s infinite ease-in-out both;
+      }
+      .loading-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .loading-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      /* === Navigation Underline Micro-interaction === */
+      .nav-link-underline {
+        position: relative;
+      }
+      .nav-link-underline::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: #ffc8dd; /* sevy-pink */
+        transform-origin: center;
+        transition: transform 0.3s ease-out;
+      }
+      .nav-link-underline:hover::after {
+        transform: scaleX(1);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://esm.sh/@google/genai@0.14.0",
+    "react-markdown": "https://esm.sh/react-markdown@9.0.1",
+    "remark-gfm": "https://esm.sh/remark-gfm@4.0.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
