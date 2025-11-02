@@ -9,17 +9,17 @@ const OurTeam: React.FC = () => {
     {
       name: t('teamMember1Name'),
       role: t('teamMember1Role'),
-      imageUrl: 'https://i.postimg.cc/m283XKdv/Tran-Nhat-Cat-Nguyen-Cropped-Optimized.jpg',
+      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/tran-nhat-cat-nguyen.jpg',
     },
     {
       name: t('teamMember2Name'),
       role: t('teamMember2Role'),
-      imageUrl: 'https://i.postimg.cc/WbXmWx9K/Mau-Thuy-Lam-Cropped-Optimized.jpg',
+      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/mau-thuy-lam.jpg',
     },
     {
       name: t('teamMember3Name'),
       role: t('teamMember3Role'),
-      imageUrl: 'https://i.postimg.cc/028dC9fq/Tran-Nhat-Nguyen-Cropped-Optimized.jpg',
+      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/tran-nhat-nguyen.jpg',
     },
   ];
 
@@ -60,7 +60,7 @@ const OurTeam: React.FC = () => {
                 {t('teamPhotoTitle')}
             </h3>
             <img
-              src="https://i.postimg.cc/4N10sJP4/Ne-n-40-DJI-20240913233511-0167-D-DNG.jpg"
+              src="https://storage.googleapis.com/sevyai-images/team/team-photo.jpg"
               alt={t('teamPhotoTitle')}
               className="mt-8 w-full aspect-[3/2] rounded-2xl object-cover shadow-lg"
               loading="lazy"
