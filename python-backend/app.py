@@ -7,6 +7,11 @@ from helper_mongodb import *
 from helper_mongodb import connect_to_mongo
 import time
 
+# Environment detection for privacy-aware logging
+# In production (Google Cloud Run), K_SERVICE environment variable is always set
+# Local development environments will not have this variable
+IS_PRODUCTION = os.getenv('K_SERVICE') is not None
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -141,7 +146,11 @@ If a user mentions abuse, assault, self-harm, or any crisis situation:
         update_sevy_ai_number_of_questions_answered()
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"\nError generating completion: {e}\n", flush=True)
+        # PRIVACY: Only print detailed error info in local development
+        if IS_PRODUCTION:
+            print("\nError generating completion: OpenAI API error\n", flush=True)
+        else:
+            print(f"\nError generating completion: {e}\n", flush=True)
         return None
 
 @app.route('/chat', methods=['POST'])
@@ -154,6 +163,13 @@ def chat():
 
     Language is automatically detected by the LLM based on user's input.
     Implements sliding window: keeps only last 5 message pairs (10 messages total)
+
+    PRIVACY POLICY - NO TRACKING:
+    - User messages are NEVER logged (local or production)
+    - AI responses are ONLY logged in local development for debugging
+    - Production logs contain ZERO chat content - only metadata (counts, timing, success/failure)
+    - No conversation data is ever stored in MongoDB (only question counters)
+    - All conversation history is maintained client-side in sessionStorage only
     """
     data = request.get_json()
     developer_mode = data.get('developerMode', False)
@@ -189,7 +205,9 @@ def chat():
         # LLM naturally detects and responds in the user's language
         reply = generate_completion(messages_history)
         if reply:
-            print(f"\nGenerated reply: {reply}\n", flush=True)
+            # PRIVACY: Only print AI responses in local development, never in production
+            if not IS_PRODUCTION:
+                print(f"\nGenerated reply: {reply}\n", flush=True)
         else:
             reply = "Sorry, I encountered an error processing your request."
             print("Error: generate_completion returned None", flush=True)
