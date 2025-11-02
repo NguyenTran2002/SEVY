@@ -9,17 +9,17 @@ const OurTeam: React.FC = () => {
     {
       name: t('teamMember1Name'),
       role: t('teamMember1Role'),
-      imageUrl: 'https://picsum.photos/seed/sevy-team1/400/600',
+      imageUrl: 'https://i.postimg.cc/m283XKdv/Tran-Nhat-Cat-Nguyen-Cropped-Optimized.jpg',
     },
     {
       name: t('teamMember2Name'),
       role: t('teamMember2Role'),
-      imageUrl: 'https://picsum.photos/seed/sevy-team2/400/600',
+      imageUrl: 'https://i.postimg.cc/WbXmWx9K/Mau-Thuy-Lam-Cropped-Optimized.jpg',
     },
     {
       name: t('teamMember3Name'),
       role: t('teamMember3Role'),
-      imageUrl: 'https://picsum.photos/seed/sevy-team3/400/600',
+      imageUrl: 'https://i.postimg.cc/028dC9fq/Tran-Nhat-Nguyen-Cropped-Optimized.jpg',
     },
   ];
 
@@ -55,13 +55,16 @@ const OurTeam: React.FC = () => {
           </ul>
         </div>
         
-        <div className="mx-auto mt-24 max-w-4xl text-center sm:mt-32">
+        <div className="mx-auto mt-24 max-w-7xl text-center sm:mt-32">
             <h3 className={`text-3xl font-bold ${language === 'vi' ? 'tracking-tight' : ''} text-sevy-text sm:text-4xl xl:text-5xl`}>
                 {t('teamPhotoTitle')}
             </h3>
-            <div className="mt-8 flex justify-center items-center w-full aspect-[3/2] rounded-2xl bg-gray-200/50">
-                <p className="text-lg text-sevy-text-secondary">Team photo coming soon</p>
-            </div>
+            <img
+              src="https://i.postimg.cc/4N10sJP4/Ne-n-40-DJI-20240913233511-0167-D-DNG.jpg"
+              alt={t('teamPhotoTitle')}
+              className="mt-8 w-full aspect-[3/2] rounded-2xl object-cover shadow-lg"
+              loading="lazy"
+            />
         </div>
 
       </div>
