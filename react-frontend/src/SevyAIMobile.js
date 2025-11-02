@@ -7,6 +7,9 @@ import './SevyAIMobile.css';
 import { useTranslation } from 'react-i18next';
 import logo from './images/SEVY Logo.png';
 
+// API base URL for production deployment (empty string uses relative URLs for local dev with proxy)
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
+
 function SevyAIMobile() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
@@ -95,7 +98,7 @@ function SevyAIMobile() {
                 ? conversationHistory.slice(-MAX_MESSAGES)
                 : conversationHistory;
 
-            const response = await fetch('/chat', {
+            const response = await fetch(`${API_BASE_URL}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -25,8 +25,8 @@ ENV username=${username}
 ENV password=${password}
 ENV server_address=${server_address}
 
-# Expose port 5000
-EXPOSE 5000
+# Expose port 8080 (Cloud Run default)
+EXPOSE 8080
 
 # Start the application
 CMD ["python", "app.py"]

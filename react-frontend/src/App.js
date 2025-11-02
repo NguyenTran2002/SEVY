@@ -10,6 +10,9 @@ import './LanguageSwitcher.css';
 import logo from './images/SEVY Logo.png';
 import cover from './images/SEVY and Students Cropped 1.jpg';
 
+// API base URL for production deployment (empty string uses relative URLs for local dev with proxy)
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '';
+
 function App() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -61,7 +64,7 @@ function App() {
 
   const fetchAllNumbers = async () => {
     try {
-      const response = await fetch('/get_all_numbers', {
+      const response = await fetch(`${API_BASE_URL}/get_all_numbers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -189,7 +192,7 @@ function App() {
         ? conversationHistory.slice(-MAX_MESSAGES)
         : conversationHistory;
 
-      const response = await fetch('/chat', {
+      const response = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
