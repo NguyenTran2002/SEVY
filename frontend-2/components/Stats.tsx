@@ -2,6 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from '../lib/i18n';
 
+// API configuration - empty string uses relative URLs for local dev (proxied)
+// In production, set VITE_BACKEND_URL to full backend URL
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 const AnimatedNumber: React.FC<{ target: number; isInView: boolean }> = ({ target, isInView }) => {
   const [count, setCount] = useState(0);
   const duration = 2000; // 2-second animation
@@ -37,10 +41,46 @@ const AnimatedNumber: React.FC<{ target: number; isInView: boolean }> = ({ targe
   return <>{count.toLocaleString()}</>;
 };
 
+interface StatsData {
+  students_taught: number;
+  sevy_ai_answers: number;
+  sevy_educators_number: number;
+}
+
 const Stats: React.FC = () => {
   const { t, language } = useTranslations();
   const statsRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
+  const [statsData, setStatsData] = useState<StatsData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch stats from backend
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/get_all_numbers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data: StatsData = await response.json();
+        setStatsData(data);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        // Keep statsData as null, will use fallback values
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -67,10 +107,23 @@ const Stats: React.FC = () => {
     };
   }, []);
 
+  // Use API data if available, otherwise fallback to hardcoded values
   const stats = [
-    { key: 'students', name: t('statsStudents'), value: '2,500+' },
-    { key: 'ai', name: t('statsAIQuestions'), value: '10,000+' },
-    { key: 'educators', name: t('statsEducators'), value: '15+' },
+    {
+      key: 'students',
+      name: t('statsStudents'),
+      value: statsData ? `${statsData.students_taught.toLocaleString()}+` : '2,500+'
+    },
+    {
+      key: 'ai',
+      name: t('statsAIQuestions'),
+      value: statsData ? `${statsData.sevy_ai_answers.toLocaleString()}+` : '10,000+'
+    },
+    {
+      key: 'educators',
+      name: t('statsEducators'),
+      value: statsData ? `${statsData.sevy_educators_number}+` : '15+'
+    },
   ];
 
   return (

@@ -1,6 +1,4 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-// Fix for API guidelines: use correct imports from @google/genai
-import { GoogleGenAI, Chat } from '@google/genai';
 import { useTranslations } from '../lib/i18n';
 import { SendIcon } from './icons/SendIcon';
 import { StopIcon } from './icons/StopIcon';
@@ -13,8 +11,12 @@ import { ArrowRightIcon } from './icons/ArrowRightIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { TrashIcon } from './icons/TrashIcon';
 
+// API configuration - empty string uses relative URLs for local dev (proxied)
+// In production, set VITE_BACKEND_URL to full backend URL
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export type Message = {
-  role: 'user' | 'model';
+  role: 'user' | 'assistant';
   content: string;
   id: string;
 };
@@ -25,33 +27,34 @@ const SevyAI: React.FC<{
   setPage?: (page: string) => void;
   isPopupMode?: boolean;
   randomStarters: string[];
-}> = ({ messages, setMessages, setPage, isPopupMode = false, randomStarters }) => {
+  storageKey?: string;
+}> = ({ messages, setMessages, setPage, isPopupMode = false, randomStarters, storageKey = 'sevyai_chat_messages_dedicated' }) => {
   const { t } = useTranslations();
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const chatRef = useRef<Chat | null>(null);
-  const stopStreamingRef = useRef(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
 
-  const initializeChat = useCallback(() => {
-    // Fix for API guidelines: API key must be from process.env.API_KEY
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-    
-    const systemInstruction = "You are SEVY AI, a compassionate and knowledgeable AI assistant from SEVY (Sex Education for Vietnamese Youth). Your purpose is to provide accurate, non-judgmental, and culturally sensitive information about sexual health. You are trained on SEVY's in-house curricula. Always be supportive and encouraging. Your conversations are private and secure.";
-
-    // Fix for API guidelines: use gemini-2.5-flash for basic text tasks
-    chatRef.current = ai.chats.create({
-      model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction: systemInstruction,
-      },
-    });
-  }, []);
-
+  // Load messages from sessionStorage on mount
   useEffect(() => {
-    initializeChat();
-  }, [initializeChat]);
+    const savedMessages = sessionStorage.getItem(storageKey);
+    if (savedMessages) {
+      try {
+        const parsed = JSON.parse(savedMessages);
+        setMessages(parsed);
+      } catch (error) {
+        console.error('Failed to parse saved messages:', error);
+      }
+    }
+  }, [storageKey, setMessages]);
+
+  // Save messages to sessionStorage whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      sessionStorage.setItem(storageKey, JSON.stringify(messages));
+    }
+  }, [messages, storageKey]);
   
   useEffect(() => {
     if (messages.length > 0) {
@@ -63,59 +66,78 @@ const SevyAI: React.FC<{
     if (!messageContent.trim() || isLoading) return;
     setInput('');
     setIsLoading(true);
-    stopStreamingRef.current = false;
 
     const newUserMessage: Message = {
       role: 'user',
       content: messageContent,
       id: `user-${Date.now()}`,
     };
-    
-    const modelMessageId = `model-${Date.now()}`;
-    const newModelMessage: Message = {
-        role: 'model',
+
+    const assistantMessageId = `assistant-${Date.now()}`;
+    const newAssistantMessage: Message = {
+        role: 'assistant',
         content: '',
-        id: modelMessageId
+        id: assistantMessageId
     };
 
-    setMessages(prev => [...prev, newUserMessage, newModelMessage]);
+    setMessages(prev => [...prev, newUserMessage, newAssistantMessage]);
 
     try {
-      if (!chatRef.current) {
-        throw new Error('Chat session not initialized.');
-      }
-      
-      const stream = await chatRef.current.sendMessageStream({ message: messageContent });
+      // Prepare conversation history with sliding window (max 10 messages)
+      const updatedMessages = [...messages, newUserMessage];
+      const conversationHistory = updatedMessages.slice(-10).map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
 
-      let accumulatedText = '';
-      for await (const chunk of stream) {
-        if (stopStreamingRef.current) {
-            break;
-        }
-        // Fix for API guidelines: extract text from response chunk
-        accumulatedText += chunk.text;
-        setMessages(prev =>
-          prev.map(msg =>
-            msg.id === modelMessageId ? { ...msg, content: accumulatedText + '▍' } : msg
-          )
-        );
+      // Create abort controller for cancellation
+      abortControllerRef.current = new AbortController();
+
+      const response = await fetch(`${API_BASE_URL}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: conversationHistory,
+          developerMode: false
+        }),
+        signal: abortControllerRef.current.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setMessages(prev =>
-          prev.map(msg =>
-            msg.id === modelMessageId ? { ...msg, content: accumulatedText } : msg
-          )
-        );
-    } catch (error) {
-      console.error('Error sending message:', error);
+
+      const data = await response.json();
+      const aiResponse = data.reply || t('aiPlaceholderResponse');
+
       setMessages(prev =>
         prev.map(msg =>
-          msg.id === modelMessageId ? { ...msg, content: t('aiPlaceholderResponse') } : msg
+          msg.id === assistantMessageId ? { ...msg, content: aiResponse } : msg
         )
       );
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        // Request was cancelled
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === assistantMessageId ? { ...msg, content: t('stopGenerating') || 'Stopped' } : msg
+          )
+        );
+      } else {
+        console.error('Error sending message:', error);
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === assistantMessageId ? { ...msg, content: t('aiPlaceholderResponse') || 'Sorry, something went wrong. Please try again.' } : msg
+          )
+        );
+      }
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
-  }, [isLoading, setMessages, t]);
+  }, [isLoading, messages, setMessages, t]);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -127,13 +149,15 @@ const SevyAI: React.FC<{
   };
 
   const handleStopGenerating = () => {
-    stopStreamingRef.current = true;
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setIsLoading(false);
   };
-  
+
   const handleClearChat = () => {
     setMessages([]);
-    initializeChat();
+    sessionStorage.removeItem(storageKey);
   };
 
   const handleCopy = (content: string, id: string) => {
@@ -216,7 +240,7 @@ const SevyAI: React.FC<{
                         : 'bg-sevy-pink-light text-sevy-text ai-bubble-gradient pr-4 pl-6'
                     }`}
                   >
-                    {message.role === 'model' &&
+                    {message.role === 'assistant' &&
                     message.content === '' &&
                     isLoading ? (
                       <div className="flex space-x-1.5 p-2">

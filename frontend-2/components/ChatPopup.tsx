@@ -99,6 +99,7 @@ const ChatPopup: React.FC<ChatPopupProps> = ({ messages, setMessages, isChatOpen
             setMessages={setMessages}
             isPopupMode
             randomStarters={randomStarters}
+            storageKey="sevyai_chat_messages_home"
           />
         </div>
       </div>

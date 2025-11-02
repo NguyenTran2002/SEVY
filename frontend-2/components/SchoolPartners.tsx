@@ -7,17 +7,19 @@ const SchoolPartners: React.FC = () => {
   const { t, language } = useTranslations();
   
   // ===================================================================
-  // !!! WARNING: DEVELOPMENT ONLY !!!
+  // Google Maps API Key - Loaded from Environment Variables
   // ===================================================================
-  // This API key is hardcoded for development and demonstration purposes.
-  // It is VISIBLE in the client-side code and is NOT secure.
-  // Before deploying to production, this key MUST be removed and
-  // replaced with a secure method of handling API keys, such as
-  // using environment variables on a server-side proxy or a cloud function.
-  // Leaking this key in production can lead to unauthorized use and
-  // significant charges on your Google Cloud account.
+  // Local development: Reads from frontend-2/.env (VITE_GOOGLE_MAPS_KEY)
+  // Cloud deployment: Injected via --build-arg during docker build
+  //
+  // IMPORTANT: This key is publicly visible in client-side code.
+  // To protect against unauthorized use:
+  // 1. Add application restrictions in Google Cloud Console
+  //    (limit to your domains: sevyai.com, *.run.app, localhost:3001)
+  // 2. Add API restrictions (only enable Maps Embed API)
+  // 3. Set up billing alerts to monitor usage
   // ===================================================================
-  const apiKey = 'AIzaSyCSg6r1MsZAJOCbBSQrKfSNUk5MQ9POIAU';
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_KEY || '';
 
   const partners = [
     {

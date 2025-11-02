@@ -9,6 +9,16 @@ services:
     networks:
       - SEVY_network
 
+  frontend-2:
+    build:
+      context: ./frontend-2
+    ports:
+      - "3001:3000"
+    depends_on:
+      - python-backend
+    networks:
+      - SEVY_network
+
   python-backend:
     build:
       context: ./python-backend
