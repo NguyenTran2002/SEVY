@@ -3,22 +3,10 @@ import { useTranslations } from '../lib/i18n';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
 import { ChevronRightIcon } from './icons/ChevronRightIcon';
 import { XIcon } from './icons/XIcon';
+import { galleryImages } from '../data/gallery-images';
 
-// Placeholder images with varying aspect ratios to showcase the masonry effect.
-const images = [
-  { id: 1, src: 'https://picsum.photos/seed/sevy1/500/800', alt: 'SEVY classroom session' },
-  { id: 2, src: 'https://picsum.photos/seed/sevy2/600/400', alt: 'Students participating in an activity' },
-  { id: 3, src: 'https://picsum.photos/seed/sevy3/500/500', alt: 'SEVY educator smiling' },
-  { id: 4, src: 'https://picsum.photos/seed/sevy4/500/700', alt: 'Group photo of students' },
-  { id: 5, src: 'https://picsum.photos/seed/sevy5/700/500', alt: 'SEVY event banner' },
-  { id: 6, src: 'https://picsum.photos/seed/sevy6/400/600', alt: 'Close-up of educational materials' },
-  { id: 7, src: 'https://picsum.photos/seed/sevy7/600/800', alt: 'Students raising their hands' },
-  { id: 8, src: 'https://picsum.photos/seed/sevy8/800/600', alt: 'Community gathering' },
-  { id: 9, src: 'https://picsum.photos/seed/sevy9/500/600', alt: 'A student asking a question' },
-  { id: 10, src: 'https://picsum.photos/seed/sevy10/700/400', alt: 'Team members preparing for a class' },
-  { id: 11, src: 'https://picsum.photos/seed/sevy11/500/750', alt: 'An interactive presentation' },
-  { id: 12, src: 'https://picsum.photos/seed/sevy12/600/600', alt: 'Positive feedback from students' },
-];
+// Gallery images hosted on Google Cloud Storage
+const images = galleryImages;
 
 const Gallery: React.FC = () => {
   const { t, language } = useTranslations();
@@ -87,7 +75,7 @@ const Gallery: React.FC = () => {
                   <img
                     onClick={() => openLightbox(index)}
                     className="w-full h-auto object-cover rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
-                    src={image.src}
+                    src={image.thumbnail}
                     alt={image.alt}
                     loading="lazy"
                   />
