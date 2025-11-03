@@ -45,6 +45,7 @@ interface StatsData {
   students_taught: number;
   sevy_ai_answers: number;
   sevy_educators_number: number;
+  sevy_school_partners?: number;
 }
 
 const Stats: React.FC = () => {
@@ -124,6 +125,14 @@ const Stats: React.FC = () => {
       name: t('statsEducators'),
       value: statsData ? `${statsData.sevy_educators_number}+` : '15+'
     },
+    {
+      key: 'schoolPartners',
+      name: t('statsSchoolPartners'),
+      value:
+        statsData && statsData.sevy_school_partners != null
+          ? `${statsData.sevy_school_partners.toLocaleString()}+`
+          : '2+'
+    },
   ];
 
   return (
@@ -134,7 +143,7 @@ const Stats: React.FC = () => {
               {t('statsTitle')}
             </h2>
         </div>
-        <dl className="grid grid-cols-1 gap-x-12 gap-y-16 text-center lg:grid-cols-3">
+        <dl className="grid grid-cols-1 gap-x-12 gap-y-16 text-center md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => {
             const numericValue = parseInt(stat.value.replace(/,/g, '').replace('+', ''));
             const suffix = stat.value.endsWith('+') ? '+' : '';
