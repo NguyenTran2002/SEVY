@@ -20,16 +20,34 @@ const Gallery: React.FC = () => {
   }, []);
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxVisible, setLightboxVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set());
 
   const openLightbox = (index: number) => {
     setCurrentImageIndex(index);
     setLightboxOpen(true);
   };
 
-  const closeLightbox = useCallback(() => {
-    setLightboxOpen(false);
+  const onImageLoad = useCallback((imageId: number) => {
+    setLoadedImages(prev => new Set(prev).add(imageId));
   }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxVisible(false);
+    setTimeout(() => setLightboxOpen(false), 300); // Wait for transition to complete
+  }, []);
+
+  // Trigger lightbox entrance animation
+  useEffect(() => {
+    if (lightboxOpen) {
+      // Small delay to allow DOM to update before triggering transition
+      const timer = setTimeout(() => setLightboxVisible(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setLightboxVisible(false);
+    }
+  }, [lightboxOpen]);
 
   const goToPrevious = useCallback(() => {
     setCurrentImageIndex(prevIndex => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
@@ -80,16 +98,40 @@ const Gallery: React.FC = () => {
               sequential={false}
               sx={{ margin: 0 }}
             >
-              {images.map((image, index) => (
-                <div key={image.id}>
-                  <img
-                    onClick={() => openLightbox(index)}
-                    className="w-full h-auto object-cover rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
-                    src={image.thumbnail}
-                    alt={image.alt}
-                  />
-                </div>
-              ))}
+              {images.map((image, index) => {
+                const isLoaded = loadedImages.has(image.id);
+
+                return (
+                  <div key={image.id} className="relative">
+                    {/* Skeleton loader */}
+                    {!isLoaded && (
+                      <div
+                        className="w-full bg-gray-200 animate-pulse rounded-xl"
+                        style={{ aspectRatio: `${image.width}/${image.height}` }}
+                      />
+                    )}
+
+                    {/* Image with load-aware slide-up animation */}
+                    <img
+                      onClick={() => openLightbox(index)}
+                      onLoad={() => onImageLoad(image.id)}
+                      loading="lazy"
+                      className={`w-full h-auto object-cover rounded-xl shadow-md cursor-pointer
+                        hover:shadow-2xl hover:scale-[1.02]
+                        transition-all duration-500 ease-out
+                        ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                      style={{
+                        transitionDelay: `${index * 75}ms`,
+                        position: isLoaded ? 'relative' : 'absolute',
+                        top: 0,
+                        left: 0
+                      }}
+                      src={image.thumbnail}
+                      alt={image.alt}
+                    />
+                  </div>
+                );
+              })}
             </Masonry>
           </div>
         </div>
@@ -97,7 +139,9 @@ const Gallery: React.FC = () => {
 
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm
+            transition-opacity duration-300 ease-out
+            ${lightboxVisible ? 'opacity-100' : 'opacity-0'}`}
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
@@ -132,7 +176,9 @@ const Gallery: React.FC = () => {
             <img
               src={images[currentImageIndex].src}
               alt={images[currentImageIndex].alt}
-              className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
+              className={`max-h-full max-w-full object-contain rounded-lg shadow-2xl
+                transition-all duration-300 ease-out
+                ${lightboxVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
             />
              <h2 id="lightbox-heading" className="sr-only">
               {images[currentImageIndex].alt}
