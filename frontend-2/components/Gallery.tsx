@@ -1,15 +1,24 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import Masonry from '@mui/lab/Masonry';
 import { useTranslations } from '../lib/i18n';
 import { ChevronLeftIcon } from './icons/ChevronLeftIcon';
 import { ChevronRightIcon } from './icons/ChevronRightIcon';
 import { XIcon } from './icons/XIcon';
 import { galleryImages } from '../data/gallery-images';
 
-// Gallery images hosted on Google Cloud Storage
-const images = galleryImages;
-
 const Gallery: React.FC = () => {
   const { t, language } = useTranslations();
+
+  // Randomize gallery images on each page visit using Fisher-Yates shuffle
+  const images = useMemo(() => {
+    const shuffled = [...galleryImages];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }, []);
+
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -24,11 +33,11 @@ const Gallery: React.FC = () => {
 
   const goToPrevious = useCallback(() => {
     setCurrentImageIndex(prevIndex => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
-  }, []);
+  }, [images.length]);
 
   const goToNext = useCallback(() => {
     setCurrentImageIndex(prevIndex => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
-  }, []);
+  }, [images.length]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -65,29 +74,29 @@ const Gallery: React.FC = () => {
           </div>
 
           <div className="mx-auto mt-16 max-w-7xl sm:mt-20 lg:mt-24">
-            <div className="columns-2 md:columns-3 lg:columns-4 gap-4 sm:gap-6 lg:gap-8">
+            <Masonry
+              columns={{ xs: 2, md: 3, lg: 4 }}
+              spacing={3}
+              sequential={false}
+              sx={{ margin: 0 }}
+            >
               {images.map((image, index) => (
-                <div 
-                  key={image.id} 
-                  className="opacity-0 animate-fade-in-up mb-4 sm:mb-6 lg:mb-8 break-inside-avoid"
-                  style={{ animationDelay: `${50 + index * 75}ms` }}
-                >
+                <div key={image.id}>
                   <img
                     onClick={() => openLightbox(index)}
-                    className="w-full h-auto object-cover rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                    className="w-full h-auto object-cover rounded-xl shadow-md hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
                     src={image.thumbnail}
                     alt={image.alt}
-                    loading="lazy"
                   />
                 </div>
               ))}
-            </div>
+            </Masonry>
           </div>
         </div>
       </div>
 
       {lightboxOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm"
           onClick={closeLightbox}
           role="dialog"
@@ -116,11 +125,11 @@ const Gallery: React.FC = () => {
             <ChevronRightIcon className="h-8 w-8" />
           </button>
 
-          <div 
-            className="relative w-full h-full flex items-center justify-center p-8" 
+          <div
+            className="relative w-full h-full flex items-center justify-center p-8"
             onClick={(e) => e.stopPropagation()}
           >
-            <img 
+            <img
               src={images[currentImageIndex].src}
               alt={images[currentImageIndex].alt}
               className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
