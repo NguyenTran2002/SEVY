@@ -1,19 +1,9 @@
 services:
-  react-frontend:
-    build:
-      context: ./react-frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - python-backend
-    networks:
-      - SEVY_network
-
-  frontend-2:
+  frontend:
     build:
       context: ./frontend-2
     ports:
-      - "3001:3000"
+      - "3000:3000"
     depends_on:
       - python-backend
     networks:

@@ -6,6 +6,9 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
+# Install tooling for asset optimization
+RUN apk add --no-cache imagemagick
+
 # Copy package files
 COPY package.json package-lock.json* ./
 
@@ -14,6 +17,10 @@ RUN npm install
 
 # Copy application files
 COPY . .
+
+# Optimize branding assets (reduce dimensions & strip metadata)
+RUN magick "public/branding/LOGO RECTANGLE.png" -strip -resize 640x -quality 92 "public/branding/LOGO RECTANGLE.png" && \
+    magick "public/branding/LOGO SQUARE.png" -strip -resize 256x256 -quality 92 "public/branding/LOGO SQUARE.png"
 
 # Build arguments (passed during docker build)
 ARG VITE_BACKEND_URL
@@ -34,6 +41,9 @@ COPY nginx.conf /etc/nginx/conf.d/configfile.template
 # Copy built files from build stage
 # Vite outputs to 'dist' directory (not 'build')
 COPY --from=build /app/dist /usr/share/nginx/html
+# Ensure static assets have web-readable permissions
+RUN find /usr/share/nginx/html -type d -exec chmod 755 {} \; \
+ && find /usr/share/nginx/html -type f -exec chmod 644 {} \;
 
 # Set environment variable for PORT (Cloud Run provides this)
 ENV PORT 8080

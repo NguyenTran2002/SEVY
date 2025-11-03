@@ -1,6 +1,6 @@
-# Frontend-2 Quick Reference
+# SEVY Frontend Quick Reference
 
-Quick commands and troubleshooting for SEVY frontend-2.
+Quick commands and troubleshooting for the SEVY frontend.
 
 ---
 
@@ -13,8 +13,7 @@ docker compose up --build
 ```
 
 **Access:**
-- Old frontend: http://localhost:3000
-- **New frontend: http://localhost:3001** ⭐
+- **Frontend: http://localhost:3000** ⭐
 - Backend: http://localhost:5001
 
 ### View Logs
@@ -22,20 +21,20 @@ docker compose up --build
 # All services
 docker compose logs -f
 
-# Just frontend-2
-docker compose logs frontend-2 -f
+# Just frontend
+docker compose logs frontend -f
 
 # Last 50 lines
-docker compose logs frontend-2 --tail 50
+docker compose logs frontend --tail 50
 ```
 
 ### Restart Service
 ```bash
-# Restart just frontend-2
-docker compose restart frontend-2
+# Restart just frontend
+docker compose restart frontend
 
 # Rebuild and restart
-docker compose up --build frontend-2
+docker compose up --build frontend
 ```
 
 ### Stop All Services
@@ -243,7 +242,7 @@ curl -X POST http://localhost:5001/get_all_numbers \
 ```bash
 cd frontend-2
 npm install
-docker compose up --build frontend-2
+docker compose up --build frontend
 ```
 
 ### Clear sessionStorage (Test)
