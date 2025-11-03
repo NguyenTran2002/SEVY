@@ -6,6 +6,7 @@ from openai import OpenAI
 from helper_mongodb import *
 from helper_mongodb import connect_to_mongo
 import time
+from datetime import datetime
 
 # Environment detection for privacy-aware logging
 # In production (Google Cloud Run), K_SERVICE environment variable is always set
@@ -321,6 +322,108 @@ def get_students_taught():
     except Exception as e:
         print(f"Error: {e}", flush=True)
         return jsonify({'students_taught': 'N/A'})
+
+@app.route('/submit_application', methods=['POST'])
+def submit_application():
+    """
+    Handle team application form submission.
+    Accepts multipart/form-data with resume file and text fields.
+
+    IMPORTANT PRIVACY NOTE:
+    - The resume file is received but NEVER stored anywhere
+    - Only text fields are saved to the database
+    - Frontend handles ALL validation
+
+    Expected fields:
+    - fullName, email, phoneNumber, education, division (text)
+    - resume (file) [RECEIVED BUT NOT STORED]
+    """
+    print("Processing application submission...", flush=True)
+
+    try:
+        # Extract text fields from form data (NO validation)
+        full_name = request.form.get('fullName', '').strip()
+        email = request.form.get('email', '').strip()
+        phone_number = request.form.get('phoneNumber', '').strip()
+        education = request.form.get('education', '').strip()
+        division = request.form.get('division', '').strip()
+
+        # Check resume file was sent (privacy requirement: receive but don't store)
+        resume_file = request.files.get('resume')
+        if resume_file:
+            print(f"Resume file received: {resume_file.filename} (not stored)", flush=True)
+
+        # Prepare application data (without resume)
+        application_data = {
+            'fullName': full_name,
+            'email': email,
+            'phoneNumber': phone_number,
+            'education': education,
+            'division': division,
+            'submittedAt': datetime.utcnow(),
+            'ipAddress': request.remote_addr
+        }
+
+        # Store in MongoDB
+        db = mongo_client["SEVY_database"]
+        collection = db["SEVY_applications"]
+        result = collection.insert_one(application_data)
+
+        print(f"Application stored successfully: {result.inserted_id}", flush=True)
+
+        return jsonify({'success': True})
+
+    except Exception as e:
+        print(f"Error processing application: {e}", flush=True)
+        return jsonify({'success': False}), 500
+
+@app.route('/subscribe_email', methods=['POST'])
+def subscribe_email():
+    """
+    Handle newsletter email subscription.
+    Accepts JSON with email field.
+    Frontend handles ALL validation.
+    Backend only checks for duplicates.
+
+    Expected JSON:
+    {
+        "email": "user@example.com"
+    }
+    """
+    print("Processing email subscription...", flush=True)
+
+    try:
+        data = request.get_json()
+        email = data.get('email', '').strip()
+
+        # Check for duplicate email in database
+        db = mongo_client["SEVY_database"]
+        collection = db["SEVY_email_list"]
+
+        existing_email = collection.find_one({'email': email})
+        if existing_email:
+            print(f"Duplicate email subscription attempt: {email}", flush=True)
+            return jsonify({'success': False, 'isDuplicate': True}), 409
+
+        # Prepare subscription data
+        subscription_data = {
+            'email': email,
+            'subscribedAt': datetime.utcnow(),
+            'isActive': True,
+            'source': 'donate_page',
+            'ipAddress': request.remote_addr
+        }
+
+        # Store in MongoDB
+        result = collection.insert_one(subscription_data)
+
+        print(f"Email subscription stored successfully: {result.inserted_id}", flush=True)
+
+        return jsonify({'success': True})
+
+    except Exception as e:
+        print(f"Error processing email subscription: {e}", flush=True)
+        return jsonify({'success': False}), 500
 
 # -----------------------
 # AUXILLARY FUNCTIONS SECTION

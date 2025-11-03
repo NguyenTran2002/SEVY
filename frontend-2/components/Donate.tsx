@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslations } from '../lib/i18n';
 import { BookOpenIcon } from './icons/BookOpenIcon';
 import { BrainIcon } from './icons/BrainIcon';
@@ -14,6 +14,12 @@ const Donate: React.FC = () => {
   const [isBankModalOpen, setIsBankModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState<'emailRequired' | 'invalidEmailFormat' | 'emailAlreadySubscribed' | 'subscriptionError' | 'networkError' | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // API base URL for backend communication
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || '';
 
   const impacts = [
     { icon: BookOpenIcon, text: t('impact1') },
@@ -24,14 +30,59 @@ const Donate: React.FC = () => {
     { icon: ApplicationWindowIcon, text: t('impact3') },
   ];
   
-  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setEmailError(null);
+
     const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    if (email) {
+    const email = (formData.get('email') as string || '').trim();
+
+    // Client-side validation - only runs on submit
+    if (!email) {
+      setEmailError('emailRequired');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('invalidEmailFormat');
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      // Send to backend API
+      const response = await fetch(`${API_BASE_URL}/subscribe_email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Success - show success modal
         setSubmittedEmail(email);
         setIsSignupModalOpen(true);
-        e.currentTarget.reset(); // Reset the form fields
+        setEmailError(null);
+        formRef.current?.reset();
+      } else if (result.isDuplicate) {
+        // Duplicate email - use KEY not string
+        setEmailError('emailAlreadySubscribed');
+      } else {
+        // Other error
+        setEmailError('subscriptionError');
+      }
+    } catch (error) {
+      console.error('Error subscribing email:', error);
+      setEmailError('networkError');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -96,10 +147,31 @@ const Donate: React.FC = () => {
                 <div className="rounded-3xl bg-white p-8 shadow-lg ring-1 ring-gray-900/10">
                     <h3 className="text-2xl sm:text-3xl font-semibold text-sevy-text">{t('newsletterTitle')}</h3>
                     <p className="mt-4 text-lg sm:text-xl xl:text-2xl text-sevy-text-secondary">{t('newsletterDesc')}</p>
-                    <form className="mt-6 flex gap-x-4" onSubmit={handleNewsletterSubmit}>
-                        <label htmlFor="email-address" className="sr-only">Email address</label>
-                        <input id="email-address" name="email" type="email" autoComplete="email" required className="min-w-0 flex-auto rounded-md border-gray-300 px-3.5 py-2 text-sevy-text shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sevy-blue text-base lg:text-lg xl:text-xl" placeholder={t('emailPlaceholder')} />
-                        <button type="submit" className="rounded-md bg-sevy-blue px-3.5 py-2.5 text-base lg:text-lg xl:text-xl font-semibold text-sevy-text shadow-sm hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sevy-blue">{t('signUp')}</button>
+                    <form ref={formRef} className="mt-6" onSubmit={handleNewsletterSubmit} noValidate>
+                        <div className="flex gap-x-4">
+                            <label htmlFor="email-address" className="sr-only">Email address</label>
+                            <input
+                              id="email-address"
+                              name="email"
+                              type="email"
+                              autoComplete="email"
+                              disabled={isSubmitting}
+                              className="min-w-0 flex-auto rounded-md border-gray-300 px-3.5 py-2 text-sevy-text shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-sevy-blue text-base lg:text-lg xl:text-xl disabled:bg-gray-100 disabled:cursor-not-allowed"
+                              placeholder={t('emailPlaceholder')}
+                            />
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="rounded-md bg-sevy-blue px-3.5 py-2.5 text-base lg:text-lg xl:text-xl font-semibold text-sevy-text shadow-sm hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sevy-blue disabled:bg-sevy-blue/50 disabled:cursor-not-allowed"
+                            >
+                              {isSubmitting ? (t('submitting') || 'Submitting...') : t('signUp')}
+                            </button>
+                        </div>
+
+                        {/* Error Message Display - Translate key during render */}
+                        {emailError && (
+                          <p className="mt-2 text-sm text-red-600">{t(emailError)}</p>
+                        )}
                     </form>
                 </div>
             </div>
