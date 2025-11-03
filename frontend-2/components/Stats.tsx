@@ -113,25 +113,22 @@ const Stats: React.FC = () => {
     {
       key: 'students',
       name: t('statsStudents'),
-      value: statsData ? `${statsData.students_taught.toLocaleString()}+` : '2,500+'
+      value: statsData ? statsData.students_taught : 2500
     },
     {
       key: 'ai',
       name: t('statsAIQuestions'),
-      value: statsData ? `${statsData.sevy_ai_answers.toLocaleString()}+` : '10,000+'
+      value: statsData ? statsData.sevy_ai_answers : 10000
     },
     {
       key: 'educators',
       name: t('statsEducators'),
-      value: statsData ? `${statsData.sevy_educators_number}+` : '15+'
+      value: statsData ? statsData.sevy_educators_number : 15
     },
     {
       key: 'schoolPartners',
       name: t('statsSchoolPartners'),
-      value:
-        statsData && statsData.sevy_school_partners != null
-          ? `${statsData.sevy_school_partners.toLocaleString()}+`
-          : '2+'
+      value: statsData && statsData.sevy_school_partners != null ? statsData.sevy_school_partners : 2
     },
   ];
 
@@ -144,21 +141,16 @@ const Stats: React.FC = () => {
             </h2>
         </div>
         <dl className="grid grid-cols-1 gap-x-12 gap-y-16 text-center md:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => {
-            const numericValue = parseInt(stat.value.replace(/,/g, '').replace('+', ''));
-            const suffix = stat.value.endsWith('+') ? '+' : '';
-            return (
-              <div key={stat.key} className="mx-auto flex max-w-xs flex-col gap-y-4">
-                <dt className="text-xl sm:text-2xl xl:text-3xl leading-7 text-sevy-text-secondary">{stat.name}</dt>
-                <dd className={`order-first text-5xl font-extrabold ${language === 'vi' ? 'tracking-tight' : ''} text-sevy-text sm:text-6xl xl:text-7xl`}>
-                  <span className="bg-gradient-to-r from-sevy-pink to-sevy-blue bg-clip-text text-transparent">
-                    <AnimatedNumber target={numericValue} isInView={isInView} />
-                    {isInView && suffix}
-                  </span>
-                </dd>
-              </div>
-            );
-          })}
+          {stats.map((stat) => (
+            <div key={stat.key} className="mx-auto flex max-w-xs flex-col gap-y-4">
+              <dt className="text-xl sm:text-2xl xl:text-3xl leading-7 text-sevy-text-secondary">{stat.name}</dt>
+              <dd className={`order-first text-5xl font-extrabold ${language === 'vi' ? 'tracking-tight' : ''} text-sevy-text sm:text-6xl xl:text-7xl`}>
+                <span className="bg-gradient-to-r from-sevy-pink to-sevy-blue bg-clip-text text-transparent">
+                  <AnimatedNumber target={stat.value} isInView={isInView} />
+                </span>
+              </dd>
+            </div>
+          ))}
         </dl>
       </div>
     </div>
