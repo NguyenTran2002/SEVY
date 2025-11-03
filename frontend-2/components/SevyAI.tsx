@@ -7,6 +7,9 @@ import { CheckIcon } from './icons/CheckIcon';
 import { ThumbsUpIcon } from './icons/ThumbsUpIcon';
 import { ThumbsDownIcon } from './icons/ThumbsDownIcon';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { ArrowRightIcon } from './icons/ArrowRightIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { TrashIcon } from './icons/TrashIcon';
@@ -35,6 +38,7 @@ const SevyAI: React.FC<{
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   // Load messages from sessionStorage on mount
   useEffect(() => {
@@ -250,7 +254,92 @@ const SevyAI: React.FC<{
                       </div>
                     ) : (
                       <div className="prose prose-sm sm:prose-base max-w-none">
-                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            // Code blocks with syntax highlighting + copy button
+                            code({ node, inline, className, children, ...props }: any) {
+                              const match = /language-(\w+)/.exec(className || '');
+                              const code = String(children).replace(/\n$/, '');
+                              const codeId = `code-${message.id}-${Math.random()}`;
+
+                              return !inline && match ? (
+                                <div className="relative group my-4">
+                                  <div className="absolute right-2 top-2 z-10">
+                                    <button
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(code);
+                                        setCopiedCode(codeId);
+                                        setTimeout(() => setCopiedCode(null), 2000);
+                                      }}
+                                      className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      {copiedCode === codeId ? '✓ Copied' : '📋 Copy'}
+                                    </button>
+                                  </div>
+                                  <SyntaxHighlighter
+                                    style={oneDark}
+                                    language={match[1]}
+                                    PreTag="div"
+                                    className="rounded-lg"
+                                    {...props}
+                                  >
+                                    {code}
+                                  </SyntaxHighlighter>
+                                </div>
+                              ) : (
+                                <code className="px-1.5 py-0.5 bg-gray-100 text-pink-600 rounded text-sm font-mono" {...props}>
+                                  {children}
+                                </code>
+                              );
+                            },
+
+                            // External links open in new tab
+                            a({ href, children, ...props }: any) {
+                              const isExternal = href?.startsWith('http');
+                              return (
+                                <a
+                                  href={href}
+                                  target={isExternal ? '_blank' : undefined}
+                                  rel={isExternal ? 'noopener noreferrer' : undefined}
+                                  className="text-blue-600 hover:text-blue-800 underline"
+                                  {...props}
+                                >
+                                  {children}
+                                </a>
+                              );
+                            },
+
+                            // Tables with overflow handling
+                            table({ children }: any) {
+                              return (
+                                <div className="overflow-x-auto my-4">
+                                  <table className="min-w-full border-collapse border border-gray-300">
+                                    {children}
+                                  </table>
+                                </div>
+                              );
+                            },
+
+                            th({ children }: any) {
+                              return (
+                                <th className="border border-gray-300 px-4 py-2 bg-gray-100 font-semibold text-left">
+                                  {children}
+                                </th>
+                              );
+                            },
+
+                            td({ children }: any) {
+                              return (
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {children}
+                                </td>
+                              );
+                            }
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
                       </div>
                     )}
                   </div>

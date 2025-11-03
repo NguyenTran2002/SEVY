@@ -25,8 +25,15 @@ const App: React.FC = () => {
   // This ensures the main AI page and the popup show the same questions.
   useEffect(() => {
     const allStarterKeys = Array.from({ length: 20 }, (_, i) => `starterQ${i + 1}`);
-    const shuffledKeys = allStarterKeys.sort(() => 0.5 - Math.random());
-    const selectedKeys = shuffledKeys.slice(0, 3);
+
+    // Fisher-Yates shuffle for proper randomization
+    const shuffled = [...allStarterKeys];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const selectedKeys = shuffled.slice(0, 3);
     setRandomStarters(selectedKeys.map(key => t(key as any)));
   }, [t]); // Regenerate if language changes.
 
