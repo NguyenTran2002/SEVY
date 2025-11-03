@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MenuIcon } from './icons/MenuIcon';
 import { XIcon } from './icons/XIcon';
-import { Logo } from './icons/Logo';
 import { useTranslations } from '../lib/i18n';
 import LanguageSwitcher from './LanguageSwitcher';
 import { BrainIcon } from './icons/BrainIcon';
@@ -64,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ setPage, isMobileMenuOpen, setIsMobileM
         <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1">
             <a href="#" onClick={(e) => handleNavClick(e, 'home')} className="-m-1.5 p-1.5">
-              <Logo className="h-10 w-auto" />
+              <img src="/branding/LOGO RECTANGLE.png" alt="SEVY logo" className="h-10 w-auto" />
             </a>
           </div>
           <div className="flex items-center gap-x-4 lg:hidden">
@@ -129,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ setPage, isMobileMenuOpen, setIsMobileM
           >
             <div className="flex items-center justify-between">
               <a href="#" onClick={(e) => handleNavClick(e, 'home')} className="-m-1.5 p-1.5">
-                <Logo className="h-10 w-auto" />
+                <img src="/branding/LOGO RECTANGLE.png" alt="SEVY logo" className="h-10 w-auto" />
               </a>
               <button
                 type="button"
