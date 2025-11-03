@@ -18,6 +18,14 @@ export default defineConfig(({ mode }) => {
             target: 'http://python-backend:5000',
             changeOrigin: true,
           },
+          '/submit_application': {
+            target: 'http://python-backend:5000',
+            changeOrigin: true,
+          },
+          '/subscribe_email': {
+            target: 'http://python-backend:5000',
+            changeOrigin: true,
+          },
         },
       },
       plugins: [react()],
