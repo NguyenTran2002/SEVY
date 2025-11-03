@@ -9,7 +9,7 @@ html {
 @font-face {
   font-family: 'ibrand';
   src: url('/branding/ibrand.woff2') format('woff2'),
-       url('/branding/ibrand.otf') format('opentype');
+    url('/branding/ibrand.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -21,7 +21,7 @@ body {
 
 /* === Vietnamese Font Adjustments === */
 html[lang="vi"] {
-  font-size: 80%;
+  font-size: 85%;
 }
 
 html[lang="vi"] body {
@@ -68,13 +68,16 @@ html[lang="vi"] #hero-title {
   width: 8px;
   height: 8px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #d1e8ff;
   border-radius: 10px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: #ffc8dd;
 }
@@ -82,6 +85,7 @@ html[lang="vi"] #hero-title {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -91,6 +95,7 @@ html[lang="vi"] #hero-title {
 .prose a {
   color: #1d4ed8;
 }
+
 .prose a:hover {
   color: #1e40af;
 }
@@ -99,6 +104,7 @@ html[lang="vi"] #hero-title {
   position: relative;
   overflow: hidden;
 }
+
 .ai-bubble-gradient::before {
   content: '';
   position: absolute;
@@ -113,21 +119,27 @@ html[lang="vi"] #hero-title {
 
 /* === Loading Dots Animation === */
 @keyframes loading-dots {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.4;
     transform: scale(0.9);
   }
+
   50% {
     opacity: 1;
     transform: scale(1);
   }
 }
+
 .loading-dot {
   animation: loading-dots 1.4s infinite ease-in-out both;
 }
+
 .loading-dot:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .loading-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
@@ -136,6 +148,7 @@ html[lang="vi"] #hero-title {
 .nav-link-underline {
   position: relative;
 }
+
 .nav-link-underline::after {
   content: '';
   position: absolute;
@@ -148,6 +161,7 @@ html[lang="vi"] #hero-title {
   transform-origin: center;
   transition: transform 0.3s ease-out;
 }
+
 .nav-link-underline:hover::after {
   transform: scaleX(1);
 }
