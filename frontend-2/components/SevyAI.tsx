@@ -194,6 +194,7 @@ const SevyAI: React.FC<{
                           </div>
                           ))}
                       </div>
+                      <p className="mt-4 text-sm text-sevy-text-secondary/60">{t('ageDisclaimer')}</p>
                   </div>
               </div>
             ) : (
@@ -205,6 +206,7 @@ const SevyAI: React.FC<{
                         <p className="text-sm font-medium text-sevy-text-secondary">{cap}</p>
                     </div>
                     ))}
+                    <p className="mt-2 text-xs text-sevy-text-secondary/60">{t('ageDisclaimer')}</p>
                 </div>
               </div>
             )}
