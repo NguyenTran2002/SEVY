@@ -9,17 +9,17 @@ const OurTeam: React.FC = () => {
     {
       name: t('teamMember1Name'),
       role: t('teamMember1Role'),
-      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/tran-nhat-cat-nguyen.jpg',
+      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/tran-nhat-nguyen.jpg',
     },
     {
       name: t('teamMember2Name'),
       role: t('teamMember2Role'),
-      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/mau-thuy-lam.jpg',
+      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/tran-nhat-cat-nguyen.jpg',
     },
     {
       name: t('teamMember3Name'),
       role: t('teamMember3Role'),
-      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/tran-nhat-nguyen.jpg',
+      imageUrl: 'https://storage.googleapis.com/sevyai-images/team/mau-thuy-lam.jpg',
     },
   ];
 
