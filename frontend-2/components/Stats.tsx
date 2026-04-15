@@ -113,17 +113,17 @@ const Stats: React.FC = () => {
     {
       key: 'students',
       name: t('statsStudents'),
-      value: statsData ? statsData.students_taught : 2500
+      value: statsData ? statsData.students_taught : 876
     },
     {
       key: 'ai',
       name: t('statsAIQuestions'),
-      value: statsData ? statsData.sevy_ai_answers : 10000
+      value: statsData ? statsData.sevy_ai_answers : 285327
     },
     {
       key: 'educators',
       name: t('statsEducators'),
-      value: statsData ? statsData.sevy_educators_number : 15
+      value: statsData ? statsData.sevy_educators_number : 82
     },
     {
       key: 'schoolPartners',
