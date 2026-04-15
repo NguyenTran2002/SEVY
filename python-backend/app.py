@@ -6,7 +6,8 @@ from openai import OpenAI
 from helper_mongodb import *
 from helper_mongodb import connect_to_mongo
 import time
-from datetime import datetime
+import random
+from datetime import datetime, timezone
 
 # Environment detection for privacy-aware logging
 # In production (Google Cloud Run), K_SERVICE environment variable is always set
@@ -220,10 +221,41 @@ def get_all_numbers():
     """
     Combined endpoint to fetch all SEVY numbers in a single query.
     Implements 30-second in-memory caching for performance.
+    Applies daily inflation (random 1-5%) to sevy_ai_answers on the
+    first request of each UTC day.
     """
     print("Getting all SEVY numbers...", flush=True)
 
-    # Check cache validity
+    # --- Daily inflation check (runs on every request, no-ops after first daily trigger) ---
+    try:
+        db = mongo_client["SEVY_database"]
+        collection = db["SEVY_numbers"]
+        today_str = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+
+        # Atomically claim today's inflation — only one request wins per UTC day
+        inflation_doc = collection.find_one_and_update(
+            {"sevy_ai_last_inflation_date": {"$exists": True, "$ne": today_str}},
+            {"$set": {"sevy_ai_last_inflation_date": today_str}}
+        )
+
+        if inflation_doc is not None:
+            # First request of today — apply random 1-5% inflation
+            ai_doc = collection.find_one({"sevy_ai_answers": {"$exists": True}})
+            if ai_doc:
+                current_displayed = int(ai_doc["sevy_ai_answers"])
+                inflation_rate = random.uniform(0.01, 0.05)
+                inflated_value = int(current_displayed * (1 + inflation_rate))
+                collection.update_one(
+                    {"sevy_ai_answers": {"$exists": True}},
+                    {"$set": {"sevy_ai_answers": inflated_value}}
+                )
+                # Invalidate cache so the new value is served immediately
+                numbers_cache['data'] = None
+                print(f"Applied daily inflation: {current_displayed} -> {inflated_value} (+{inflation_rate:.2%})", flush=True)
+    except Exception as e:
+        print(f"Inflation check error (non-fatal): {e}", flush=True)
+
+    # --- Cache check ---
     current_time = time.time()
     if numbers_cache['data'] and (current_time - numbers_cache['timestamp']) < numbers_cache['ttl']:
         print("Returning cached numbers", flush=True)

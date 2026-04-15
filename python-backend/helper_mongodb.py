@@ -122,18 +122,16 @@ def update_sevy_ai_number_of_questions_answered():
     db = client['SEVY_database']
     collection = db['SEVY_numbers']
 
-    # Find the document with the sevy_ai_answers field and retrieve the current value
-    document = collection.find_one({"sevy_ai_answers": {"$exists": True}})
+    # Increment the displayed (inflated) count
+    collection.update_one(
+        {"sevy_ai_answers": {"$exists": True}},
+        {"$inc": {"sevy_ai_answers": 1}}
+    )
 
-    if document:
-        current_value = int(document["sevy_ai_answers"])  # Get the current value of sevy_ai_answers
-        new_value = current_value + 1  # Increment the value by 1
+    # Increment the real count
+    collection.update_one(
+        {"sevy_ai_real_answers": {"$exists": True}},
+        {"$inc": {"sevy_ai_real_answers": 1}}
+    )
 
-        # Update the document with the new value
-        collection.update_one(
-            {"sevy_ai_answers": current_value},  # Match the document with the current value
-            {"$set": {"sevy_ai_answers": new_value}}  # Set the new incremented value
-        )
-    else:
-        print("Document with sevy_ai_answers not found.")
     client.close()

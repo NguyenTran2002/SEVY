@@ -55,32 +55,44 @@ const Stats: React.FC = () => {
   const [statsData, setStatsData] = useState<StatsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch stats from backend
+  // Fetch stats from backend with retry for Cloud Run cold starts
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchWithTimeout = async (timeoutMs: number): Promise<Response> => {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
       try {
-        const response = await fetch(`${API_BASE_URL}/get_all_numbers`, {
+        return await fetch(`${API_BASE_URL}/get_all_numbers`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data: StatsData = await response.json();
-        setStatsData(data);
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-        // Keep statsData as null, will use fallback values
       } finally {
-        setIsLoading(false);
+        clearTimeout(timer);
       }
     };
 
-    fetchStats();
+    const fetchStats = async () => {
+      const maxRetries = 3;
+      const timeoutMs = 15000; // 15s per attempt to allow for cold starts
+
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetchWithTimeout(timeoutMs);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const data: StatsData = await response.json();
+          setStatsData(data);
+          return; // Success — exit
+        } catch (error) {
+          console.error(`Stats fetch attempt ${attempt}/${maxRetries} failed:`, error);
+          if (attempt < maxRetries) {
+            await new Promise(r => setTimeout(r, 2000)); // Wait 2s before retry
+          }
+        }
+      }
+      // All retries exhausted — fallback values will be used
+    };
+
+    fetchStats().finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
