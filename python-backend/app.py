@@ -14,6 +14,10 @@ from datetime import datetime, timezone
 # Local development environments will not have this variable
 IS_PRODUCTION = os.getenv('K_SERVICE') is not None
 
+if IS_PRODUCTION:
+    import logging
+    logging.getLogger('werkzeug').setLevel(logging.ERROR)
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
